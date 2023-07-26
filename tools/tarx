@@ -1,0 +1,21 @@
+#!/bin/bash
+
+usage() {
+    cat << EOM
+Usage: $(basename "$0") [OPTION]...
+  -c <director name>         Directory for compression
+  -d <file name for tar xz>  The file name
+  -h                         Show this help
+EOM
+}
+
+echo $1 $2
+if [[ $1 == "-c" ]]; then
+    echo "Multi-threading compress $2"
+    XZ_OPT='-T0 -9' tar -czf $2.tar.gz $2 --checkpoint=.10000
+elif [[ $1 == "-d" ]]; then
+    echo "Multi-threading decompress $2"
+    XZ_OPT='-T0 -9' tar -xzf $2 --checkpoint=.10000
+else
+    usage
+fi
