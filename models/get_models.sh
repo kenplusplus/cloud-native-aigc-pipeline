@@ -4,7 +4,7 @@ CURR_DIR=$(readlink -f "$(dirname "$0")")
 
 MODEL_DOWNLOAD_URL="http://css-devops.sh.intel.com/download/aigc/models/"
 
-MODELS=("fastchat-t5-3b-v1.0" )
+MODELS=("fastchat-t5-3b-v1.0" "vicuna-7b-v1.3" )
 
 for model_name in ${MODELS[@]}; do
     if [[ ! -f ${CURR_DIR}/${model_name}.tar.gz ]]; then
