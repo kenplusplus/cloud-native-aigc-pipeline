@@ -51,7 +51,7 @@ ABI=$(python -c "import torch; print(int(torch._C._GLIBCXX_USE_CXX11_ABI))")
 # Compile individual component
 export CC=${CONDA_PREFIX}/bin/gcc
 export CXX=${CONDA_PREFIX}/bin/g++
-export LD_PRELOAD=${CONDA_PREFIX}/lib/libstdc++.so
+#export LD_PRELOAD=${CONDA_PREFIX}/lib/libstdc++.so
 
 #  LLVM
 LLVM_ROOT="$(pwd)/release"
