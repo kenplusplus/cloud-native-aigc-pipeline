@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastchat-model-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastchat-model-worker
+  template:
+    metadata:
+      labels:
+        app: fastchat-model-worker
+    spec:
+      containers:
+      - name: fastchat-model-worker
+        image: leyao/fastchat:latest
+        env:
+        - name: FASTCHAT_WORKER_MODEL_NAMES
+          value: lmsys
+        volumeMounts:
+        - mountPath: /root/.cache/huggingface
+          name: huggingface
+        command: ["python3.9", "-m", "fastchat.serve.model_worker", "--model-path", "lmsys/vicuna-7b-v1.3", "--worker-address", "http://fastchat-model-worker:21002", "--controller-address", "http://fastchat-controller:21001", "--host", "0.0.0.0", "--port", "21002", "--device", "cpu"]
+      volumes:
+      - name: huggingface
+        emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastchat-model-worker
+spec:
+  selector:
+    app: fastchat-model-worker
+  ports:
+    - protocol: TCP
+      port: 21002
+      targetPort: 21002
+

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastchat-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastchat-controller
+  template:
+    metadata:
+      labels:
+        app: fastchat-controller
+    spec:
+      containers:
+      - name: fastchat-controller
+        image: leyao/fastchat:latest
+        ports:
+        - containerPort: 21001
+        command: ["python3.9", "-m", "fastchat.serve.controller", "--host", "0.0.0.0", "--port", "21001"]
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastchat-controller
+spec:
+  selector:
+    app: fastchat-controller
+  ports:
+    - protocol: TCP
+      port: 21001
+      targetPort: 21001
+
