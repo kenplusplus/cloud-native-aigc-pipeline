@@ -1,6 +1,5 @@
 #!/bin/bash
-set -x
-set -e
+set -ex
 
 VER_LLVM="llvmorg-13.0.0"
 VER_PYTORCH=""
@@ -14,7 +13,7 @@ for CMD in gcc g++ python git nproc; do
 done
 echo "You are using GCC: $(gcc --version | grep gcc)"
 
-MAX_JOBS_VAR=$(nproc)
+MAX_JOBS_VAR=$((nproc-2))
 if [ ! -z "${MAX_JOBS}" ]; then
     MAX_JOBS_VAR=${MAX_JOBS}
 fi
@@ -23,12 +22,26 @@ fi
 BASEFOLDER=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cd ${BASEFOLDER}
 # Checkout individual components
-if [ ! -d llvm-project ]; then
-    git clone https://github.com/llvm/llvm-project.git
-fi
-if [ ! -d intel-extension-for-pytorch ]; then
-    git clone https://github.com/intel/intel-extension-for-pytorch.git
-fi
+#if [ ! -d llvm-project ]; then
+#    git clone https://github.com/llvm/llvm-project.git
+#fi
+wget http://css-devops.sh.intel.com/download/mirror/llvm-project/llvm-project-2023_07_31.tar.gz
+mkdir -p llvm-project
+pushd llvm-project
+tar zxf ../llvm-project-2023_07_31.tar.gz
+git config --global --add safe.directory '*'
+git fetch origin
+popd
+
+#if [ ! -d intel-extension-for-pytorch ]; then
+#    git clone https://github.com/intel/intel-extension-for-pytorch.git
+#fi
+wget http://css-devops.sh.intel.com/download/mirror/intel-extension-for-pytorch/intel-extension-for-pytorch-2023_07_31.tar.gz
+tar zxf intel-extension-for-pytorch-2023_07_31.tar.gz
+pushd intel-extension-for-pytorch
+git config --global --add safe.directory '*'
+git fetch origin
+popd
 
 # Checkout required branch/commit and update submodules
 cd llvm-project
@@ -46,7 +59,14 @@ git submodule update --init --recursive
 
 # Install dependencies
 python -m pip install cmake
-python -m pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cpu
+#
+#python -m pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cpu
+#
+pip config set global.extra-index-url "https://mirror.lzu.edu.cn/pypi/ https://pypi.tuna.tsinghua.edu.cn/simple  https://mirror.sjtu.edu.cn/pypi/web/simple"
+python -m pip install http://css-devops.sh.intel.com/download/mirror/torch/torch-2.1.0.dev20230730%2Bcpu-cp38-cp38-linux_x86_64.whl
+python -m pip install http://css-devops.sh.intel.com/download/mirror/torch/torchaudio-2.1.0.dev20230730%2Bcpu-cp38-cp38-linux_x86_64.whl
+python -m pip install http://css-devops.sh.intel.com/download/mirror/torch/torchvision-0.16.0.dev20230730%2Bcpu-cp38-cp38-linux_x86_64.whl
+
 ABI=$(python -c "import torch; print(int(torch._C._GLIBCXX_USE_CXX11_ABI))")
 
 # Compile individual component
