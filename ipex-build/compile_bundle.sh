@@ -13,7 +13,7 @@ for CMD in gcc g++ python git nproc; do
 done
 echo "You are using GCC: $(gcc --version | grep gcc)"
 
-MAX_JOBS_VAR=$((nproc-2))
+MAX_JOBS_VAR=$(($(nproc)-2))
 if [ ! -z "${MAX_JOBS}" ]; then
     MAX_JOBS_VAR=${MAX_JOBS}
 fi
@@ -25,7 +25,7 @@ cd ${BASEFOLDER}
 #if [ ! -d llvm-project ]; then
 #    git clone https://github.com/llvm/llvm-project.git
 #fi
-wget http://css-devops.sh.intel.com/download/mirror/llvm-project/llvm-project-2023_07_31.tar.gz
+wget -q http://css-devops.sh.intel.com/download/mirror/llvm-project/llvm-project-2023_07_31.tar.gz
 mkdir -p llvm-project
 pushd llvm-project
 tar zxf ../llvm-project-2023_07_31.tar.gz
@@ -36,7 +36,7 @@ popd
 #if [ ! -d intel-extension-for-pytorch ]; then
 #    git clone https://github.com/intel/intel-extension-for-pytorch.git
 #fi
-wget http://css-devops.sh.intel.com/download/mirror/intel-extension-for-pytorch/intel-extension-for-pytorch-2023_07_31.tar.gz
+wget -q http://css-devops.sh.intel.com/download/mirror/intel-extension-for-pytorch/intel-extension-for-pytorch-2023_07_31.tar.gz
 tar zxf intel-extension-for-pytorch-2023_07_31.tar.gz
 pushd intel-extension-for-pytorch
 git config --global --add safe.directory '*'
