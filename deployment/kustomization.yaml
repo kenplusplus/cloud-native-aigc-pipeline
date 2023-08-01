@@ -5,4 +5,5 @@ resources:
   - fastchat-controller.yaml
   - fastchat-model-worker.yaml
   - fastchat-api-server.yaml
+  - fastchat-web-ui.yaml
 
