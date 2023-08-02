@@ -1,8 +1,12 @@
 #!/bin/bash
 
+set -ex
+
 CURR_DIR=$(readlink -f "$(dirname "$0")")
 
-VER_IPEX="v2.1.0.dev+cpu.llm"
+source ~/.bashrc
+
+VER_IPEX="ken-dev-llm"
 
 LLVM_ROOT=/llvm/release
 export PATH=${LLVM_ROOT}/bin:$PATH
@@ -21,16 +25,21 @@ export LD_PRELOAD=${CONDA_PREFIX}/lib/libstdc++.so
 
 # Checkout individual components
 if [ ! -d intel-extension-for-pytorch ]; then
-    wget http://css-devops.sh.intel.com/download/mirror/intel-extension-for-pytorch/intel-extension-for-pytorch-2023_07_31.tar.gz
-    tar zxvf intel-extension-for-pytorch-2023_07_31.tar.gz
+    #wget http://css-devops.sh.intel.com/download/mirror/intel-extension-for-pytorch/intel-extension-for-pytorch-2023_07_31.tar.gz
+    #tar zxvf intel-extension-for-pytorch-2023_07_31.tar.gz
+    #git config --global --add safe.directory "*"
+    wget http://css-devops.sh.intel.com/download/mirror/intel-extension-for-pytorch/intel-extension-for-pytorch-2023-08-02.tar.gz
+    tar zxvf intel-extension-for-pytorch-2023-08-02.tar.gz
     git config --global --add safe.directory "*"
 fi
 
-cd intel-extension-for-pytorch
-git checkout ${VER_IPEX}
-git submodule sync
-git submodule update --init --recursive
-cd ..
+#cd intel-extension-for-pytorch
+#git remote add ken https://github.com/intel-sandbox/cse-ipex.git
+#git fetch ken
+#git checkout ${VER_IPEX}
+#git submodule sync
+#git submodule update --init --recursive
+#cd ..
 
 ln -s ${LLVM_ROOT}/bin/llvm-config ${LLVM_ROOT}/bin/llvm-config-13
 
