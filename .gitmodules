@@ -3,4 +3,4 @@
 	url = https://github.com/kenplusplus/FastChat.git
 [submodule "intel-extension-for-pytorch"]
 	path = intel-extension-for-pytorch
-	url = https://github.com/intel/intel-extension-for-pytorch.git
+	url = https://github.com/intel-sandbox/cse-ipex.git
