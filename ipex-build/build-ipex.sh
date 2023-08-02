@@ -4,7 +4,9 @@ CURR_DIR=$(readlink -f "$(dirname "$0")")
 
 VER_IPEX="v2.1.0.dev+cpu.llm"
 
-LLVM_ROOT=/llvm/
+LLVM_ROOT=/llvm/release
+export PATH=${LLVM_ROOT}/bin:$PATH
+export LD_LIBRARY_PATH=${LLVM_ROOT}/lib:$LD_LIBRARY_PATH
 
 MAX_JOBS_VAR=$(nproc)
 if [ ! -z "${MAX_JOBS}" ]; then
@@ -21,7 +23,7 @@ export LD_PRELOAD=${CONDA_PREFIX}/lib/libstdc++.so
 if [ ! -d intel-extension-for-pytorch ]; then
     wget http://css-devops.sh.intel.com/download/mirror/intel-extension-for-pytorch/intel-extension-for-pytorch-2023_07_31.tar.gz
     tar zxvf intel-extension-for-pytorch-2023_07_31.tar.gz
-    git config --global --add safe.directory /ipex/intel-extension-for-pytorch
+    git config --global --add safe.directory "*"
 fi
 
 cd intel-extension-for-pytorch
