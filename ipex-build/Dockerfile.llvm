@@ -42,4 +42,4 @@ FROM dev-base AS build
 COPY --from=conda /opt/conda /opt/conda
 ADD build-llvm.sh /llvm/
 ADD .condarc /opt/conda/.condarc
-RUN bash /llvm/build-llvm.sh
+RUN cd /llvm && bash build-llvm.sh

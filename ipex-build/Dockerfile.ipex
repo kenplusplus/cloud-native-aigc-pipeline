@@ -1,0 +1,6 @@
+FROM llvm
+
+ADD build-ipex.sh /ipex/
+ADD .condarc /opt/conda/.condarc
+ADD pip.conf ~/.pip/pip.conf
+RUN cd /ipex && bash build-ipex.sh
