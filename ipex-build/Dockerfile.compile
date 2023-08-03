@@ -40,6 +40,7 @@ RUN curl -fsSL -v -o ~/miniconda.sh -O  https://repo.anaconda.com/miniconda/Mini
 
 FROM dev-base AS build
 COPY --from=conda /opt/conda /opt/conda
+RUN conda init bash
 ADD .condarc /opt/conda/.condarc
 ADD pip.conf ~/.pip/pip.conf
 ADD build-llvm.sh /llvm/

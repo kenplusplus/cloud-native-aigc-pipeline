@@ -12,10 +12,12 @@ LLVM_ROOT=/llvm/release
 export PATH=${LLVM_ROOT}/bin:$PATH
 export LD_LIBRARY_PATH=${LLVM_ROOT}/lib:$LD_LIBRARY_PATH
 
-MAX_JOBS_VAR=$(nproc)
+MAX_JOBS_VAR=$(($(nproc) / 2 ))
+MAX_JOBS_VAR=$((MAX_JOBS_VAR<20?MAX_JOBS_VAR:20))
 if [ ! -z "${MAX_JOBS}" ]; then
     MAX_JOBS_VAR=${MAX_JOBS}
 fi
+export MAX_JOBS=$((MAX_JOBS_VAR<20?MAX_JOBS_VAR:20))
 
 CONDA_PREFIX=/opt/conda/
 # Compile individual component
