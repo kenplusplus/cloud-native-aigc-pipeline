@@ -4,7 +4,7 @@ CURR_DIR=$(readlink -f "$(dirname "$0")")
 
 MODEL_DOWNLOAD_URL="http://css-devops.sh.intel.com/download/aigc/models/"
 
-MODELS=("fastchat-t5-3b-v1.0" "vicuna-7b-v1.3" )
+MODELS=("fastchat-t5-3b-v1.0" "vicuna-7b-v1.3" "opt-1.3b-bf16-8b-samples" "Llama-2-7b-chat-hf-sharded-bf16")
 
 
 download_a_model() {
