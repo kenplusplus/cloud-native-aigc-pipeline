@@ -2,6 +2,22 @@
 
 This project is to bring AIGC to Kubernetes via cloud native stateless design.
 
+## Download Models
+
+The pre-trained models were at http://css-devops.sh.intel.com/download/aigc/models/
+
+- To download  model:
+
+```
+./models/get_models.sh opt-1.3b-bf16-8b-samples
+```
+
+- To download all models:
+
+```
+./models/get_models.sh all
+```
+
 ## Getting Start to Run in Container
 
 1. Build container `gar-registry.caas.intel.com/cpio/cloud-native-aigc`
