@@ -26,6 +26,12 @@ The pre-trained models were at http://css-devops.sh.intel.com/download/aigc/mode
 ./container-build.sh
 ```
 
+There are two tags will be built:
+- `gar-registry.caas.intel.com/cpio/cnagc-fastchat:llm-cpu`
+    This is based on the ipex tag [v2.1.0.dev+cpu.llm](https://github.com/intel/intel-extension-for-pytorch/tree/v2.1.0.dev+cpu.llm)
+- `gar-registry.caas.intel.com/cpio/cnagc-fastchat:2.0.110-xpu`
+    This is based on the ipex release tag [v2.0.110+xpu](https://github.com/intel/intel-extension-for-pytorch/tree/v2.0.110+xpu)
+
 2. Run cloud native AIGC container with given model
 
 ```
