@@ -33,15 +33,16 @@ if [ ! -d intel-extension-for-pytorch ]; then
     wget http://css-devops.sh.intel.com/download/mirror/intel-extension-for-pytorch/intel-extension-for-pytorch-2023-08-02.tar.gz
     tar zxvf intel-extension-for-pytorch-2023-08-02.tar.gz
     git config --global --add safe.directory "*"
+
+    #cd intel-extension-for-pytorch
+    #git remote add ken https://github.com/intel-sandbox/cse-ipex.git
+    #git fetch ken
+    #git checkout ${VER_IPEX}
+    #git submodule sync
+    #git submodule update --init --recursive
+    #cd ..
 fi
 
-#cd intel-extension-for-pytorch
-#git remote add ken https://github.com/intel-sandbox/cse-ipex.git
-#git fetch ken
-#git checkout ${VER_IPEX}
-#git submodule sync
-#git submodule update --init --recursive
-#cd ..
 
 ln -s ${LLVM_ROOT}/bin/llvm-config ${LLVM_ROOT}/bin/llvm-config-13
 
