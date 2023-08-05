@@ -54,11 +54,11 @@ process_args "$@"
 
 echo "Check ISA from envrionment: ATEN_CPU_CAPABILITY=${ATEN_CPU_CAPABILITY}"
 echo "Check ISA from pytorch:"
-python -c 'import intel_extension_for_pytorch._C as core;print(core._get_current_isa_level())'
+/opt/conda/bin/python -c 'import intel_extension_for_pytorch._C as core;print(core._get_current_isa_level())'
 
 #export OMP_NUM_THREADS=1
 #export KMP_BLOCKTIME=1
 export KMP_HW_SUBSET=1T
 
 cd ${FASTCHAT_ROOT}
-python3 -m fastchat.serve.cli --model-path ${MODEL_PATH} --device cpu
+/opt/conda/bin/python -m fastchat.serve.cli --model-path ${MODEL_PATH} --device cpu
