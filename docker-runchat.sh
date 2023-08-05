@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -ex
 CURR_DIR=$(readlink -f "$(dirname "$0")")
 ISA_TYPE="avx2"
 MODEL_PATH=""
@@ -86,7 +86,7 @@ else
         -v ./fastchat:/fastchat \
         -v $MODEL_PATH:/model/ \
         -v ./start-chat.sh:/start-chat.sh \
-        ${REGISTER}${CONTAINER_NAME}${TAG} \
+        ${REGISTER}${CONTAINER_NAME}:${TAG} \
         /start-chat.sh -m /model/ -r /fastchat
 fi
 
