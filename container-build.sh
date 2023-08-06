@@ -13,5 +13,13 @@ docker build \
 docker build \
     -f ./container/Dockerfile.release \
     --progress plain \
-    -t ${REGISTER}${CONTAINER_NAME}:2.0.110-xpu \
+    --target v2.0.100-cpu \
+    -t ${REGISTER}${CONTAINER_NAME}:v2.0.100-cpu \
+    .
+
+docker build \
+    -f ./container/Dockerfile.release \
+    --progress plain \
+    --target v2.0.110-xpu \
+    -t ${REGISTER}${CONTAINER_NAME}:v2.0.110-xpu \
     .

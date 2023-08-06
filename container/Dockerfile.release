@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:22.04 as base
 
 RUN echo "deb http://linux-ftp.sh.intel.com/pub/mirrors/ubuntu/ $(. /etc/os-release && echo $VERSION_CODENAME) main restricted universe multiverse" \
         > /etc/apt/sources.list && \
@@ -37,7 +37,20 @@ RUN /opt/conda/bin/conda init bash
 RUN /opt/conda/bin/conda install -y python=3.10 conda-build pyyaml numpy ipython mkl mkl-include ninja cython typing pybind11 Pillow && \
     /opt/conda/bin/conda clean -ya
 
-RUN /opt/conda/bin/python -m pip install torch==2.0.1a0 torchvision==0.15.2a0 intel_extension_for_pytorch==2.0.110+xpu -f https://developer.intel.com/ipex-whl-stable-xpu
+ADD fastchat/ /fastchat
+
+# =======
+
+FROM base as v2.0.100-cpu
+
+RUN /opt/conda/bin/python -m pip install torch==2.0.1+cpu torchvision==0.15.2+cpu -f http://css-devops.sh.intel.com/download/mirror/torch/ --trusted-host css-devops.sh.intel.com
+RUN /opt/conda/bin/python -m pip install intel_extension_for_pytorch==2.0.100
+
+RUN /opt/conda/bin/python -m pip install /fastchat/
+
+# =======
+
+FROM base as v2.0.110-xpu
 
 RUN wget https://registrationcenter-download.intel.com/akdlm/IRC_NAS/992857b9-624c-45de-9701-f6445d845359/l_BaseKit_p_2023.2.0.49397.sh
 RUN chmod +x ./l_BaseKit_p_2023.2.0.49397.sh && ./l_BaseKit_p_2023.2.0.49397.sh -a --silent --eula accept
@@ -50,6 +63,3 @@ ENV LD_LIBRARY_PATH=/opt/intel/oneapi/mkl/2023.2.0/lib/intel64/:\
 /opt/intel/oneapi/compiler/2023.2.0/linux/lib/:\
 /opt/intel/oneapi/compiler/2023.2.0/linux/compiler/lib/intel64_lin/:\
 /opt/conda/lib
-
-ADD fastchat/ /fastchat
-RUN /opt/conda/bin/python -m pip install /fastchat/

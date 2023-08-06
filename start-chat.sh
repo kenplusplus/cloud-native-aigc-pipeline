@@ -58,7 +58,11 @@ echo "Check ISA from pytorch:"
 
 #export OMP_NUM_THREADS=1
 #export KMP_BLOCKTIME=1
-export KMP_HW_SUBSET=1T
+#export KMP_HW_SUBSET=1T
+#export GOMP_CPU_AFFINITY="0-3"
+#export OMP_PROC_BIND=CLOSE
+#export OMP_SCHEDULE=STATIC
+export LD_PRELOAD=/opt/conda/lib/libiomp5.so:/usr/lib/x86_64-linux-gnu/libtcmalloc.so
 
 cd ${FASTCHAT_ROOT}
 /opt/conda/bin/python -m fastchat.serve.cli --model-path ${MODEL_PATH} --device cpu

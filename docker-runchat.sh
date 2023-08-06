@@ -6,7 +6,7 @@ MODEL_PATH=""
 REGISTER="gar-registry.caas.intel.com/cpio/"
 CONTAINER_NAME="cnagc-fastchat"
 IS_DEBUG=false
-TAG="2.0.110-xpu"
+TAG="v2.0.100-cpu"
 
 info() {
     echo -e "\e[1;33mINFO: $*\e[0;0m"
@@ -30,17 +30,18 @@ usage() {
 Usage: $(basename "$0") [OPTION]...
   -i <ISA type>     [avx2|avx512|amx]
   -m <model path>   Directory name of model path
-  -t <tag>          [llm-cpu|2.0.110-xpu], default is 2.0.110-xpu
+  -t <tag>          [llm-cpu|v2.0.100-cpu|v2.0.110-xpu], default is v2.0.100-cpu
   -d                Debug mode
   -h                Show this help
 EOM
 }
 
 process_args() {
-    while getopts ":i:m:hd" option; do
+    while getopts ":i:m:t:hd" option; do
         case "$option" in
             i) ISA_TYPE=$OPTARG;;
             m) MODEL_PATH=$OPTARG;;
+            t) TAG=$OPTARG;;
             d) IS_DEBUG=true;;
             h) usage
                exit 0

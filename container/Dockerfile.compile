@@ -7,6 +7,14 @@
 
 ARG BASE_IMAGE=ubuntu:20.04
 FROM ${BASE_IMAGE} AS dev-base
+
+RUN echo "deb http://linux-ftp.sh.intel.com/pub/mirrors/ubuntu/ $(. /etc/os-release && echo $VERSION_CODENAME) main restricted universe multiverse" \
+        > /etc/apt/sources.list && \
+    echo "deb http://linux-ftp.sh.intel.com/pub/mirrors/ubuntu/ $(. /etc/os-release && echo $VERSION_CODENAME)-updates main restricted universe multiverse" \
+        >> /etc/apt/sources.list && \
+    echo "deb http://linux-ftp.sh.intel.com/pub/mirrors/ubuntu/ $(. /etc/os-release && echo $VERSION_CODENAME)-security main restricted universe multiverse" \
+        >> /etc/apt/sources.list
+
 RUN --mount=type=cache,id=apt-dev,target=/var/cache/apt \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
