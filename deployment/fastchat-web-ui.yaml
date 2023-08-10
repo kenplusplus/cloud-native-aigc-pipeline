@@ -14,10 +14,15 @@ spec:
     spec:
       containers:
       - name: fastchat-web-ui
-        image: leyao/fastchat:latest
+        image: leyao/fastchat:v1.0.3
         ports:
         - containerPort: 9000
-        command: ["python3.9", "-m", "fastchat.serve.gradio_web_server", "--controller-address", "http://fastchat-controller:21001", "--host", "0.0.0.0", "--port", "9000"]
+        command: ["/entrypoint.sh"]
+        env:
+        - name: DEPLOY_TYPE
+          value: "ui"
+        - name: FASTCHAT_ROOT
+          value: "/fastchat"
 
 ---
 apiVersion: v1
@@ -25,10 +30,12 @@ kind: Service
 metadata:
   name: fastchat-web-ui
 spec:
+  type: NodePort
   selector:
     app: fastchat-web-ui
   ports:
     - protocol: TCP
       port: 9000
       targetPort: 9000
+      nodePort: 31009
 

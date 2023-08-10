@@ -14,17 +14,17 @@ spec:
     spec:
       containers:
       - name: fastchat-model-worker
-        image: leyao/fastchat:latest
+        image: leyao/fastchat:v1.0.3
         env:
-        - name: FASTCHAT_WORKER_MODEL_NAMES
-          value: lmsys
-        volumeMounts:
-        - mountPath: /root/.cache/huggingface
-          name: huggingface
-        command: ["python3.9", "-m", "fastchat.serve.model_worker", "--model-path", "lmsys/vicuna-7b-v1.3", "--worker-address", "http://fastchat-model-worker:21002", "--controller-address", "http://fastchat-controller:21001", "--host", "0.0.0.0", "--port", "21002", "--device", "cpu"]
-      volumes:
-      - name: huggingface
-        emptyDir: {}
+        - name: MODEL_NAME
+          value: "vicuna-7b-v1.3"
+        - name: ATEN_CPU_CAPABILITY
+          value: "avx2"
+        - name: DEPLOY_TYPE
+          value: "model"
+        - name: FASTCHAT_ROOT
+          value: "/fastchat"
+        command: ["/entrypoint.sh"]
 
 ---
 apiVersion: v1

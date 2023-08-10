@@ -25,10 +25,12 @@ kind: Service
 metadata:
   name: fastchat-api-server
 spec:
+  type: NodePort
   selector:
     app: fastchat-api-server
   ports:
     - protocol: TCP
       port: 8000
       targetPort: 8000
+      nodePort: 31008
 

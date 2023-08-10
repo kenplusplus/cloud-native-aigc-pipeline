@@ -14,11 +14,15 @@ spec:
     spec:
       containers:
       - name: fastchat-controller
-        image: leyao/fastchat:latest
+        image: leyao/fastchat:v1.0.3
         ports:
         - containerPort: 21001
-        command: ["python3.9", "-m", "fastchat.serve.controller", "--host", "0.0.0.0", "--port", "21001"]
-
+        command: ["/entrypoint.sh"]
+        env:
+        - name: DEPLOY_TYPE
+          value: "controller"
+        - name: FASTCHAT_ROOT
+          value: "/fastchat"
 ---
 apiVersion: v1
 kind: Service
