@@ -88,6 +88,8 @@ kubectl apply -k kustomization.yaml
 
 ![](docs/fastchat-ui1.png)
 
+![](docs/fastchat-ui2.png)
+
 ![](docs/carbon-fastchat.png)
 
 ![](docs/k8s-dashboard-example1.png)

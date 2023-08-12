@@ -1,5 +1,7 @@
 from gar-registry.caas.intel.com/cpio/cnagc-fastchat:v2.0.100-cpu
 
+RUN /opt/conda/bin/python -m pip install plotly
+
 COPY ./container/cnagc-fastchat-k8s/entrypoint.sh .
 COPY ./models/get_models.sh /models/
 

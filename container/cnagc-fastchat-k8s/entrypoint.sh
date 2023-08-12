@@ -25,7 +25,7 @@ case "$DEPLOY_TYPE" in
         ;;
     "ui")
         log "Starting UI on port ${UI_PORT}..."
-        /opt/conda/bin/python -m fastchat.serve.gradio_web_server --controller-url http://fastchat-controller:"${CONTROLLER_PORT}" --host 0.0.0.0 --port "${UI_PORT}"
+        /opt/conda/bin/python -m fastchat.serve.gradio_web_server_multi --controller-url http://fastchat-controller:"${CONTROLLER_PORT}" --host 0.0.0.0 --port "${UI_PORT}"
         ;;
     "model")
         if [ -z "$MODEL_NAME" ]; then
