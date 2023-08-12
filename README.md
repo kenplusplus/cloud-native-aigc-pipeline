@@ -2,7 +2,7 @@
 
 This project is to bring AIGC to Kubernetes via cloud native stateless design.
 
-## Download Models
+## 1. Download Models
 
 The pre-trained models were at http://css-devops.sh.intel.com/download/aigc/models/
 
@@ -18,7 +18,7 @@ The pre-trained models were at http://css-devops.sh.intel.com/download/aigc/mode
 ./models/get_models.sh all
 ```
 
-## Getting Start to Run in Container
+## 2. Getting Start to Run in Container
 
 1. Build container `gar-registry.caas.intel.com/cpio/cnagc-fastchat`
 
@@ -67,4 +67,19 @@ docker pull gar-registry.caas.intel.com/cpio/cnagc-fastchat:v2.0.110-xpu
 
 ## Getting Start to Run on Kubernetes
 
-TBD
+
+### 3.1 Build container `gar-registry.caas.intel.com/cpio/cnagc-fastchat`
+
+
+```
+./container-build.sh -c cnagc-fastchat-k8s
+```
+
+There are following tags, the default one is `2.0.100-cpu`
+
+### 3.2 Deploy
+
+```
+cd deployment
+kubectl apply -k kustomization.yaml
+```
