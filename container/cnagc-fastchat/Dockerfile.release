@@ -31,7 +31,7 @@ RUN curl -fsSL -v -o ~/miniconda.sh -O  https://repo.anaconda.com/miniconda/Mini
     ~/miniconda.sh -b -p /opt/conda && \
     rm ~/miniconda.sh
 
-ADD container/.condarc /opt/conda/.condarc
+ADD container/cnagc-fastchat/.condarc /opt/conda/.condarc
 RUN /opt/conda/bin/conda init bash
 RUN /opt/conda/bin/conda install -y python=3.10 conda-build pyyaml numpy ipython mkl mkl-include ninja cython typing pybind11 Pillow && \
     /opt/conda/bin/conda clean -ya

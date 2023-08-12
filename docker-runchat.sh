@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+
 CURR_DIR=$(readlink -f "$(dirname "$0")")
 ISA_TYPE="avx2"
 MODEL_PATH=""
@@ -31,7 +31,7 @@ Usage: $(basename "$0") [OPTION]...
   -i <ISA type>     [avx2|avx512|amx]
   -m <model path>   Directory name of model path
   -t <tag>          [llm-cpu|v2.0.100-cpu|v2.0.110-xpu], default is v2.0.100-cpu
-  -d                Debug mode
+  -d                Interactive debug mode
   -h                Show this help
 EOM
 }
@@ -69,6 +69,13 @@ echo "Start run chat in docker ..."
 
 process_args "$@"
 
+echo "======================================="
+echo " Model        : $MODEL_PATH"
+echo " Container    : ${REGISTER}${CONTAINER_NAME}:${TAG}"
+echo " ISA          : ${ISA_TYPE}"
+echo " Debug        : $IS_DEBUG"
+echo "======================================="
+
 if [[ $IS_DEBUG == true ]]; then
     docker run \
         -it \
@@ -76,7 +83,7 @@ if [[ $IS_DEBUG == true ]]; then
         -e ATEN_CPU_CAPABILITY=${ISA_TYPE} \
         -v ./fastchat:/fastchat \
         -v $MODEL_PATH:/model/ \
-        -v ./start-chat.sh:/start-chat.sh \
+        -v ./container/cnagc-fastchat/start-chat.sh:/start-chat.sh \
         ${REGISTER}${CONTAINER_NAME}:${TAG} \
         /bin/bash
 else
@@ -86,7 +93,7 @@ else
         -e ATEN_CPU_CAPABILITY=${ISA_TYPE} \
         -v ./fastchat:/fastchat \
         -v $MODEL_PATH:/model/ \
-        -v ./start-chat.sh:/start-chat.sh \
+        -v ./container/cnagc-fastchat/start-chat.sh:/start-chat.sh \
         ${REGISTER}${CONTAINER_NAME}:${TAG} \
         /start-chat.sh -m /model/ -r /fastchat
 fi

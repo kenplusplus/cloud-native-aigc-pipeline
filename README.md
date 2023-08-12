@@ -23,7 +23,7 @@ The pre-trained models were at http://css-devops.sh.intel.com/download/aigc/mode
 1. Build container `gar-registry.caas.intel.com/cpio/cnagc-fastchat`
 
 ```
-./container-build.sh
+./container-build.sh -c cnagc-fastchat
 ```
 
 There are following tags, the default one is `2.0.100-cpu`

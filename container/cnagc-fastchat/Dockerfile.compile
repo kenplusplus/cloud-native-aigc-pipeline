@@ -49,11 +49,11 @@ RUN curl -fsSL -v -o ~/miniconda.sh -O  https://repo.anaconda.com/miniconda/Mini
 FROM dev-base AS build
 COPY --from=conda /opt/conda /opt/conda
 RUN conda init bash
-ADD container/.condarc /opt/conda/.condarc
-ADD container/pip.conf ~/.pip/pip.conf
-ADD container/build-llvm.sh /llvm/
+ADD container/cnagc-fastchat/.condarc /opt/conda/.condarc
+ADD container/cnagc-fastchat/pip.conf ~/.pip/pip.conf
+ADD container/cnagc-fastchat/build-llvm.sh /llvm/
 RUN cd /llvm && bash build-llvm.sh
-ADD container/build-ipex.sh /ipex/
+ADD container/cnagc-fastchat/build-ipex.sh /ipex/
 RUN conda run --no-capture-output /ipex/build-ipex.sh
 
 FROM dev-base as dev

@@ -65,4 +65,4 @@ echo "Check ISA from pytorch:"
 export LD_PRELOAD=/opt/conda/lib/libiomp5.so:/usr/lib/x86_64-linux-gnu/libtcmalloc.so
 
 cd ${FASTCHAT_ROOT}
-/opt/conda/bin/python -m fastchat.serve.cli --model-path ${MODEL_PATH} --device cpu
+/opt/conda/bin/python -m fastchat.serve.cli --model-path ${MODEL_PATH} --device cpu --debug
