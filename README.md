@@ -65,7 +65,7 @@ docker pull gar-registry.caas.intel.com/cpio/cnagc-fastchat:v2.0.110-xpu
 ```
 
 
-## Getting Start to Run on Kubernetes
+## 3. Getting Start to Run on Kubernetes
 
 
 ### 3.1 Build container `gar-registry.caas.intel.com/cpio/cnagc-fastchat`
@@ -83,3 +83,9 @@ There are following tags, the default one is `2.0.100-cpu`
 cd deployment
 kubectl apply -k kustomization.yaml
 ```
+
+## 4. Demo
+
+![](docs/fastchat-ui1.png)
+
+![](docs/carbon-fastchat.png)
