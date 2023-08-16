@@ -24,6 +24,10 @@ spec:
           value: "model"
         - name: FASTCHAT_ROOT
           value: "/fastchat"
+        - name: MODEL_WORKER_SVC
+          value: fastchat-model-worker
+        - name: MODEL_WORKER_PORT
+          value: "21002"
         command: ["/entrypoint.sh"]
 
 ---
