@@ -8,4 +8,5 @@ resources:
     #  - fastchat-api-server.yaml
   - fastchat-web-ui.yaml
   - kubernetes-dashboard.yaml
+  - kepler-exporter.yaml
 

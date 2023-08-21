@@ -4,3 +4,6 @@
 [submodule "intel-extension-for-pytorch"]
 	path = intel-extension-for-pytorch
 	url = https://github.com/intel-sandbox/cse-ipex.git
+[submodule "kube-prometheus"]
+	path = kube-prometheus
+	url = https://github.com/prometheus-operator/kube-prometheus.git

@@ -79,10 +79,17 @@ There are following tags, the default one is `2.0.100-cpu`
 
 ### 3.2 Deploy
 
+Deploy Fastchat, Kepler-exporter and Kubernetes-dashboard:
+
 ```
 cd deployment
 kubectl apply -k kustomization.yaml
 ```
+Deploy Prometheus operator:
+
+Follow guide [here](https://sustainable-computing.io/installation/kepler/#deploy-the-prometheus-operator). 
+
+The `git clone` step is not needed, since `kube-proemetheus` has been one of the sub-modules of `cse-cnagc` repo.
 
 ## 4. Demo
 
