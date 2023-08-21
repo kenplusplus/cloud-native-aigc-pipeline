@@ -4,6 +4,8 @@ kind: Kustomization
 resources:
   - fastchat-controller.yaml
   - fastchat-model-worker.yaml
+  - fastchat-model-worker-compare.yaml
     #  - fastchat-api-server.yaml
   - fastchat-web-ui.yaml
+  - kubernetes-dashboard.yaml
 

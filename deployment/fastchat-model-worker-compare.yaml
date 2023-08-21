@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastchat-model-worker1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastchat-model-worker1
+  template:
+    metadata:
+      labels:
+        app: fastchat-model-worker1
+    spec:
+      containers:
+      - name: fastchat-model-worker1
+        image: gar-registry.caas.intel.com/cpio/cnagc-fastchat-k8s:latest
+        env:
+        - name: MODEL_NAME
+          value: "opt-1.3b-bf16-8b-samples"
+        - name: ATEN_CPU_CAPABILITY
+          value: "avx2"
+        - name: DEPLOY_TYPE
+          value: "model"
+        - name: FASTCHAT_ROOT
+          value: "/fastchat"
+        - name: MODEL_WORKER_SVC
+          value: fastchat-model-worker1
+        - name: MODEL_WORKER_PORT
+          value: "21003"
+        command: ["/entrypoint.sh"]
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastchat-model-worker1
+spec:
+  selector:
+    app: fastchat-model-worker1
+  ports:
+    - protocol: TCP
+      port: 21003
+      targetPort: 21003
+
