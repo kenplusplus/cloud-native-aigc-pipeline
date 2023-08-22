@@ -46,7 +46,7 @@ build() {
                 .
 
             docker build \
-                -f .${CNAGC_FASTCHAT_ROOT}/Dockerfile.release \
+                -f ${CNAGC_FASTCHAT_ROOT}/Dockerfile.release \
                 --progress plain \
                 --target v2.0.100-cpu \
                 -t ${REGISTER}${CONTAINER_NAME}:v2.0.100-cpu \
