@@ -1,4 +1,4 @@
-from gar-registry.caas.intel.com/cpio/cnagc-fastchat:v2.0.100-cpu
+from gar-registry.caas.intel.com/cpio/cnagc-fastchat:v2.0.101-cpu
 
 RUN /opt/conda/bin/python -m pip install plotly
 

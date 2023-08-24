@@ -15,6 +15,13 @@ spec:
       containers:
       - name: fastchat-model-worker1
         image: gar-registry.caas.intel.com/cpio/cnagc-fastchat-k8s:latest
+        ports:
+        - containerPort: 8000
+          name: http
+          protocol: TCP
+        - containerPort: 21003
+          name: model
+          protocol: TCP
         env:
         - name: MODEL_NAME
           value: "opt-1.3b-bf16-8b-samples"
@@ -35,11 +42,18 @@ apiVersion: v1
 kind: Service
 metadata:
   name: fastchat-model-worker1
+  labels:
+    app: fastchat-model-worker1
 spec:
   selector:
     app: fastchat-model-worker1
   ports:
-    - protocol: TCP
-      port: 21003
-      targetPort: 21003
+  - protocol: TCP
+    name: model
+    port: 21003
+    targetPort: 21003
+  - name: http
+    port: 8000
+    protocol: TCP
+    targetPort: 8000
 

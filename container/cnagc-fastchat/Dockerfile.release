@@ -43,7 +43,7 @@ ADD fastchat/ /fastchat
 FROM base as v2.0.100-cpu
 
 RUN /opt/conda/bin/python -m pip install torch==2.0.1+cpu torchvision==0.15.2+cpu -f http://css-devops.sh.intel.com/download/mirror/torch/ --trusted-host css-devops.sh.intel.com
-RUN /opt/conda/bin/python -m pip install intel_extension_for_pytorch==2.0.100
+RUN /opt/conda/bin/python -m pip install intel_extension_for_pytorch==2.0.100 prometheus_client
 RUN /opt/conda/bin/python -m pip install /fastchat/
 
 # =======
