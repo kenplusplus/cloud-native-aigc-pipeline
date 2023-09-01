@@ -69,4 +69,4 @@ ENV LD_PRELOAD "/opt/conda/lib/libiomp5.so /usr/lib/x86_64-linux-gnu/libtcmalloc
 ENV LD_LIBRARY_PATH "/opt/conda/lib/python3.8/site-packages/lib/"
 
 ADD fastchat/ /fastchat
-RUN conda run --no-capture-output /opt/conda/bin/python -m pip install /fastchat/
+RUN conda run --no-capture-output /opt/conda/bin/python -m pip install -e /fastchat/".[model_worker,webui]"
