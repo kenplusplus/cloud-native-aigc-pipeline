@@ -1,19 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fastchat-model-worker1
+  name: cse-aigc-model-worker-amx
+  namespace: amx
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: fastchat-model-worker1
+      app: cse-aigc-model-worker-amx
   template:
     metadata:
       labels:
-        app: fastchat-model-worker1
+        app: cse-aigc-model-worker-amx
     spec:
       containers:
-      - name: fastchat-model-worker1
+      - name: cse-aigc-model-worker-amx
         image: gar-registry.caas.intel.com/cpio/cnagc-fastchat-k8s:latest
         ports:
         - containerPort: 8000
@@ -24,29 +25,36 @@ spec:
           protocol: TCP
         env:
         - name: MODEL_NAME
-          value: "opt-1.3b-bf16-8b-samples"
+          value: "vicuna-7b-v1.3"
         - name: ATEN_CPU_CAPABILITY
-          value: "avx2"
+          value: "amx"
+        - name: CPU_ISA
+          value: "amx"
         - name: DEPLOY_TYPE
           value: "model"
         - name: FASTCHAT_ROOT
           value: "/fastchat"
         - name: MODEL_WORKER_SVC
-          value: fastchat-model-worker1
+          value: cse-aigc-model-worker-amx.amx.svc.cluster.local
+        - name: CONTROLLER_SVC
+          value: cse-aigc-controller.default.svc.cluster.local
         - name: MODEL_WORKER_PORT
           value: "21003"
+        - name: OMP_NUM_THREADS
+          value: "62"
         command: ["/entrypoint.sh"]
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: fastchat-model-worker1
+  name: cse-aigc-model-worker-amx
+  namespace: amx
   labels:
-    app: fastchat-model-worker1
+    app: cse-aigc-model-worker-amx
 spec:
   selector:
-    app: fastchat-model-worker1
+    app: cse-aigc-model-worker-amx
   ports:
   - protocol: TCP
     name: model

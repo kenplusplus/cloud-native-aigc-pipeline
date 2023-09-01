@@ -1,38 +1,43 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fastchat-controller
+  name: cse-aigc-web-ui
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: fastchat-controller
+      app: cse-aigc-web-ui
   template:
     metadata:
       labels:
-        app: fastchat-controller
+        app: cse-aigc-web-ui
     spec:
       containers:
-      - name: fastchat-controller
+      - name: cse-aigc-web-ui
         image: gar-registry.caas.intel.com/cpio/cnagc-fastchat-k8s:latest
         ports:
-        - containerPort: 21001
+        - containerPort: 9000
         command: ["/entrypoint.sh"]
         env:
         - name: DEPLOY_TYPE
-          value: "controller"
+          value: "ui"
         - name: FASTCHAT_ROOT
           value: "/fastchat"
+        - name: CONTROLLER_SVC
+          value: cse-aigc-controller
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: fastchat-controller
+  name: cse-aigc-web-ui
 spec:
+  type: NodePort
   selector:
-    app: fastchat-controller
+    app: cse-aigc-web-ui
   ports:
     - protocol: TCP
-      port: 21001
-      targetPort: 21001
+      port: 9000
+      targetPort: 9000
+      nodePort: 31009
 
