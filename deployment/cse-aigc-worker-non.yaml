@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cse-aigc-model-worker-non
-  namespace: non
+  namespace: aigc-non
 spec:
   replicas: 1
   selector:
@@ -16,31 +16,34 @@ spec:
       containers:
       - name: cse-aigc-model-worker-non
         image: gar-registry.caas.intel.com/cpio/cnagc-fastchat-k8s:latest
+        resources:
+          limits:
+            cpu: "32"
         ports:
         - containerPort: 8000
           name: http
           protocol: TCP
-        - containerPort: 21002
+        - containerPort: 21003
           name: model
           protocol: TCP
         env:
         - name: MODEL_NAME
-          value: "vicuna-7b-v1.3"
-          #value: "opt-1.3b-bf16-8b-samples"
-        - name: ATEN_CPU_CAPABILITY
+          #value: "vicuna-7b-v1.3"
+          value: "Llama-2-7b-chat-hf-sharded-bf16"
+        - name: CPU_ISA
           value: "avx2"
         - name: DEPLOY_TYPE
           value: "model"
         - name: FASTCHAT_ROOT
           value: "/fastchat"
         - name: MODEL_WORKER_SVC
-          value: cse-aigc-model-worker-non.non.svc.cluster.local
+          value: cse-aigc-model-worker-non.aigc-non.svc.cluster.local
         - name: MODEL_WORKER_PORT
           value: "21002"
         - name: CONTROLLER_SVC
           value: cse-aigc-controller.default.svc.cluster.local
         - name: OMP_NUM_THREADS
-          value: "62"
+          value: "32"
         command: ["/entrypoint.sh"]
 
 ---
@@ -48,7 +51,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: cse-aigc-model-worker-non
-  namespace: non
+  namespace: aigc-non
   labels:
     app: cse-aigc-model-worker-non
 spec:

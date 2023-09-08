@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cse-aigc-model-worker-amx
-  namespace: amx
+  namespace: aigc-amx
 spec:
   replicas: 1
   selector:
@@ -16,6 +16,9 @@ spec:
       containers:
       - name: cse-aigc-model-worker-amx
         image: gar-registry.caas.intel.com/cpio/cnagc-fastchat-k8s:latest
+        resources:
+          limits:
+            cpu: "32"
         ports:
         - containerPort: 8000
           name: http
@@ -25,9 +28,8 @@ spec:
           protocol: TCP
         env:
         - name: MODEL_NAME
-          value: "vicuna-7b-v1.3"
-        - name: ATEN_CPU_CAPABILITY
-          value: "amx"
+          #value: "vicuna-7b-v1.3"
+          value: "Llama-2-7b-chat-hf-sharded-bf16"
         - name: CPU_ISA
           value: "amx"
         - name: DEPLOY_TYPE
@@ -35,13 +37,13 @@ spec:
         - name: FASTCHAT_ROOT
           value: "/fastchat"
         - name: MODEL_WORKER_SVC
-          value: cse-aigc-model-worker-amx.amx.svc.cluster.local
+          value: cse-aigc-model-worker-amx.aigc-amx.svc.cluster.local
         - name: CONTROLLER_SVC
           value: cse-aigc-controller.default.svc.cluster.local
         - name: MODEL_WORKER_PORT
           value: "21003"
         - name: OMP_NUM_THREADS
-          value: "62"
+          value: "32"
         command: ["/entrypoint.sh"]
 
 ---
@@ -49,7 +51,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: cse-aigc-model-worker-amx
-  namespace: amx
+  namespace: aigc-amx
   labels:
     app: cse-aigc-model-worker-amx
 spec:
