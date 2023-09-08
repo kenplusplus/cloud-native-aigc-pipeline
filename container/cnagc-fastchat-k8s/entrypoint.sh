@@ -36,14 +36,14 @@ case "$DEPLOY_TYPE" in
         else
             ../models/get_models.sh "$MODEL_NAME"
         fi
-        log "Check ISA from environment: ATEN_CPU_CAPABILITY=${ATEN_CPU_CAPABILITY}"
+        log "Check ISA from environment: ATEN_CPU_CAPABILITY=${CPU_ISA}"
         log "Check ISA from pytorch:"
         /opt/conda/bin/python -c 'import intel_extension_for_pytorch._C as core;print(core._get_current_isa_level())'
 
         export LD_PRELOAD="/opt/conda/lib/libiomp5.so:/usr/lib/x86_64-linux-gnu/libtcmalloc.so"
         MODEL_PATH="$MODEL_NAME"  # Adjust this path based on where the get_model script downloads the models
         log "Starting model worker on port ${MODEL_WORKER_PORT}..."
-	/opt/conda/bin/python -m fastchat.serve.model_worker --model-path "${MODEL_PATH}" --model-names "${MODEL_NAME}-${ATEN_CPU_CAPABILITY}" --worker-address http://"${MODEL_WORKER_SVC}":"${MODEL_WORKER_PORT}" --controller-address http://"${CONTROLLER_SVC}":"${CONTROLLER_PORT}" --host 0.0.0.0 --port "${MODEL_WORKER_PORT}" --device cpu
+	/opt/conda/bin/python -m fastchat.serve.model_worker --model-path "${MODEL_PATH}" --model-names "${MODEL_NAME}-${CPU_ISA}" --worker-address http://"${MODEL_WORKER_SVC}":"${MODEL_WORKER_PORT}" --controller-address http://"${CONTROLLER_SVC}":"${CONTROLLER_PORT}" --host 0.0.0.0 --port "${MODEL_WORKER_PORT}" --device cpu
         ;;
     "openaiapi")
         log "Starting OpenAI API server on port ${OPENAI_API_PORT}..."
