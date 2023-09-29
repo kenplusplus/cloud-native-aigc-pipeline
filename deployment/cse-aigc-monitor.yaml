@@ -1,14 +1,14 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: cse-aigc-model-worker-non
+  name: cse-aigc-worker-non
   namespace: non
   labels:
-    service-monitor: cse-aigc-model-worker-non
+    service-monitor: cse-aigc-worker-non
 spec:
   selector:
     matchLabels:
-      app: cse-aigc-model-worker-non
+      app: cse-aigc-worker-non
   endpoints:
   - port: http
     interval: 15s
@@ -17,14 +17,14 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: cse-aigc-model-worker-amx
+  name: cse-aigc-worker-amx
   namespace: amx
   labels:
-    service-monitor: cse-aigc-model-worker-amx
+    service-monitor: cse-aigc-worker-amx
 spec:
   selector:
     matchLabels:
-      app: cse-aigc-model-worker-amx
+      app: cse-aigc-worker-amx
   endpoints:
   - port: http
     interval: 15s

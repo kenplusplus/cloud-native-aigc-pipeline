@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: cse-aigc-web-ui
-        image: gar-registry.caas.intel.com/cpio/cnagc-fastchat-k8s:latest
+        image: bluewish/cnagc-fastchat-k8s:latest
         ports:
         - containerPort: 9000
         command: ["/entrypoint.sh"]

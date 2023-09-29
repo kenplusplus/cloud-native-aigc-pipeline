@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: fastchat-api-server
-        image: gar-registry.caas.intel.com/cpio/cnagc-fastchat-k8s:latest
+        image: bluewish/cnagc-fastchat-k8s:latest
         ports:
         - containerPort: 8000
         command: ["python3.9", "-m", "fastchat.serve.openai_api_server", "--controller-address", "http://fastchat-controller:21001", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cse-aigc-model-worker-non
-  namespace: aigc-non
+  name: cse-aigc-worker-non
+  namespace: non
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cse-aigc-model-worker-non
+      app: cse-aigc-worker-non
   template:
     metadata:
       labels:
-        app: cse-aigc-model-worker-non
+        app: cse-aigc-worker-non
     spec:
       containers:
-      - name: cse-aigc-model-worker-non
-        image: gar-registry.caas.intel.com/cpio/cnagc-fastchat-k8s:latest
+      - name: cse-aigc-worker-non
+        image: bluewish/cnagc-fastchat-k8s:latest
         resources:
           limits:
             cpu: "32"
@@ -37,7 +37,7 @@ spec:
         - name: FASTCHAT_ROOT
           value: "/fastchat"
         - name: MODEL_WORKER_SVC
-          value: cse-aigc-model-worker-non.aigc-non.svc.cluster.local
+          value: cse-aigc-worker-non.aigc-non.svc.cluster.local
         - name: MODEL_WORKER_PORT
           value: "21002"
         - name: CONTROLLER_SVC
@@ -50,13 +50,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cse-aigc-model-worker-non
-  namespace: aigc-non
+  name: cse-aigc-worker-non
+  namespace: non
   labels:
-    app: cse-aigc-model-worker-non
+    app: cse-aigc-worker-non
 spec:
   selector:
-    app: cse-aigc-model-worker-non
+    app: cse-aigc-worker-non
   ports:
     - protocol: TCP
       name: model
