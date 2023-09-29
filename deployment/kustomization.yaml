@@ -3,9 +3,9 @@ kind: Kustomization
 
 resources:
   - cse-aigc-controller.yaml
-  - cse-aigc-worker-amx.yaml
-  - cse-aigc-worker-non.yaml
-  - cse-aigc-monitor.yaml
+  #- cse-aigc-worker-amx.yaml
+  #- cse-aigc-worker-non.yaml
+  #- cse-aigc-monitor.yaml
   - cse-aigc-web-ui.yaml
   - kubernetes-dashboard.yaml
   - kepler-exporter.yaml
