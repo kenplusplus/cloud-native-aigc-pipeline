@@ -83,6 +83,9 @@ Deploy Fastchat, Kepler-exporter and Kubernetes-dashboard:
 
 ```
 cd deployment
+kubectl create ns aigc-amx
+kubectl create ns aigc-non
+kubectl create ns monitoring
 kubectl apply -k kustomization.yaml
 ```
 Deploy Prometheus operator:

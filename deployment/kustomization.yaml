@@ -6,7 +6,6 @@ resources:
   - cse-aigc-worker-amx.yaml
   - cse-aigc-worker-non.yaml
   - cse-aigc-monitor.yaml
-  - cse-aigc-api-server.yaml
   - cse-aigc-web-ui.yaml
   - kubernetes-dashboard.yaml
   - kepler-exporter.yaml
