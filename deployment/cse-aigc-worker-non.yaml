@@ -28,10 +28,11 @@ spec:
           protocol: TCP
         env:
         - name: MODEL_NAME
-          #value: "vicuna-7b-v1.3"
           value: "Llama-2-7b-chat-hf-sharded-bf16"
         - name: CPU_ISA
-          value: "avx2"
+          value: "avx512_bf16"
+        - name: ATEN_CPU_CAPABILITY
+          value: "avx512_bf16"
         - name: DEPLOY_TYPE
           value: "model"
         - name: FASTCHAT_ROOT

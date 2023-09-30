@@ -28,9 +28,10 @@ spec:
           protocol: TCP
         env:
         - name: MODEL_NAME
-          #value: "vicuna-7b-v1.3"
           value: "Llama-2-7b-chat-hf-sharded-bf16"
         - name: CPU_ISA
+          value: "amx"
+        - name: ATEN_CPU_CAPABILITY
           value: "amx"
         - name: DEPLOY_TYPE
           value: "model"
