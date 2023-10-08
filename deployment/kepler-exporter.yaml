@@ -210,7 +210,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
-        image: quay.io/sustainable_computing_io/kepler:latest
+        image: quay.io/sustainable_computing_io/kepler:release-0.5.5
         imagePullPolicy: Always
         livenessProbe:
           failureThreshold: 5
