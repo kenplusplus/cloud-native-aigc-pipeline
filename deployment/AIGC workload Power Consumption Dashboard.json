@@ -22,7 +22,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 30,
+  "id": 29,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -475,7 +475,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "code",
-          "expr": "sum(irate(kepler_node_package_joules_total{exported_instance=~\"demo-quantagrid-d54q-2u-worker\"}[1m])) + sum(irate(kepler_node_dram_joules_total{exported_instance=~\"demo-quantagrid-d54q-2u-worker\"}[1m]))",
+          "expr": "sum(irate(kepler_node_package_joules_total{exported_instance=~\"demo-worker-non\"}[1m])) + sum(irate(kepler_node_dram_joules_total{exported_instance=~\"demo-worker-non\"}[1m]))",
           "legendFormat": "Non-AMX",
           "range": true,
           "refId": "A"
@@ -486,7 +486,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "code",
-          "expr": "sum(irate(kepler_node_package_joules_total{exported_instance=~\"demo-quantagrid-d54q-2u\"}[1m])) + sum(irate(kepler_node_dram_joules_total{exported_instance=~\"demo-quantagrid-d54q-2u\"}[1m]))",
+          "expr": "sum(irate(kepler_node_package_joules_total{exported_instance=~\"demo-worker-amx\"}[1m])) + sum(irate(kepler_node_dram_joules_total{exported_instance=~\"demo-worker-amx\"}[1m]))",
           "hide": false,
           "legendFormat": "AMX",
           "range": true,
@@ -594,7 +594,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "code",
-          "expr": "avg(irate(node_cpu_scaling_frequency_hertz{instance=~\"demo-quantagrid-d54q-2u-worker\"}[1m]) * 100)",
+          "expr": "avg(irate(node_cpu_scaling_frequency_hertz{instance=~\"demo-worker-non\"}[1m]) * 100)",
           "legendFormat": "Non-AMX",
           "range": true,
           "refId": "A"
@@ -605,7 +605,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "code",
-          "expr": "avg(irate(node_cpu_scaling_frequency_hertz{instance=~\"demo-quantagrid-d54q-2u\"}[1m])* 100)",
+          "expr": "avg(irate(node_cpu_scaling_frequency_hertz{instance=~\"demo-worker-amx\"}[1m])* 100)",
           "hide": false,
           "legendFormat": "AMX",
           "range": true,
@@ -701,7 +701,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "code",
-          "expr": "instance:node_cpu:rate:sum{instance=~\"demo-quantagrid-d54q-2u-worker\"}",
+          "expr": "instance:node_cpu:rate:sum{instance=~\"demo-worker-non\"}",
           "legendFormat": "Non-AMX",
           "range": true,
           "refId": "A"
@@ -712,7 +712,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "code",
-          "expr": "instance:node_cpu:rate:sum{instance=~\"demo-quantagrid-d54q-2u\"}",
+          "expr": "instance:node_cpu:rate:sum{instance=~\"demo-worker-amx\"}",
           "hide": false,
           "legendFormat": "AMX",
           "range": true,
@@ -785,7 +785,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -929,7 +930,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1058,6 +1060,6 @@
   "timezone": "browser",
   "title": "AIGC workload Power Consumption Dashboard",
   "uid": "MhnADUW4x",
-  "version": 7,
+  "version": 2,
   "weekStart": ""
 }
