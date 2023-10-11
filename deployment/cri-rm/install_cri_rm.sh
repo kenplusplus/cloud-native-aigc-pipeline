@@ -17,7 +17,7 @@ sudo systemctl enable cri-resource-manager && sudo systemctl start cri-resource-
 # Configure the kubelet args
 echo "Configure the kubelet args to use cri-rm as the container runtime endpoint"
 #sudo echo "KUBELET_KUBEADM_ARGS=\"--container-runtime=remote --container-runtime-endpoint=unix:///var/run/cri-resmgr/cri-resmgr.sock --pod-infra-container-image=registry.k8s.io/pause:3.8\"" > /var/lib/kubelet/kubeadm-flags.env
-echo "KUBELET_KUBEADM_ARGS=\"--container-runtime=remote --container-runtime-endpoint=unix:///var/run/cri-resmgr/cri-resmgr.sock --pod-infra-container-image=registry.k8s.io/pause:3.8\"" | sudo tee -a /var/lib/kubelet/kubeadm-flags.env
+echo "KUBELET_KUBEADM_ARGS=\"--container-runtime-endpoint=unix:///var/run/cri-resmgr/cri-resmgr.sock --pod-infra-container-image=registry.k8s.io/pause:3.8\"" | sudo tee -a /var/lib/kubelet/kubeadm-flags.env
 sudo systemctl daemon-reload
 sudo systemctl restart kubelet
 
@@ -30,5 +30,6 @@ kubectl apply -f ./agent/.
 kubectl apply -f ./policy/balloons.yaml
 
 # Reload cri-rm
+sudo systemctl stop cri-resource-manager
 cri-resmgr --reset-policy
 sudo systemctl restart cri-resource-manager
