@@ -81,6 +81,7 @@ if [[ $IS_DEBUG == true ]]; then
         -it \
         -v .:/cse-cnagc \
         -e ATEN_CPU_CAPABILITY=${ISA_TYPE} \
+	-e CPU_ISA=${ISA_TYPE} \
         -v ./fastchat:/fastchat \
         -v $MODEL_PATH:/model/ \
         -v ./container/cnagc-fastchat/start-chat.sh:/start-chat.sh \
@@ -91,6 +92,7 @@ else
         -it \
         -v .:/cse-cnagc \
         -e ATEN_CPU_CAPABILITY=${ISA_TYPE} \
+	-e CPU_ISA=${ISA_TYPE} \
         -v ./fastchat:/fastchat \
         -v $MODEL_PATH:/model/ \
         -v ./container/cnagc-fastchat/start-chat.sh:/start-chat.sh \
