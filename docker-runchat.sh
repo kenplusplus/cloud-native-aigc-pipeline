@@ -3,7 +3,7 @@
 CURR_DIR=$(readlink -f "$(dirname "$0")")
 ISA_TYPE="avx2"
 MODEL_PATH=""
-REGISTER="gar-registry.caas.intel.com/cpio/"
+REGISTER="bluewish/"
 CONTAINER_NAME="cnagc-fastchat"
 IS_DEBUG=false
 TAG="v2.2.0-cpu"
@@ -81,7 +81,7 @@ if [[ $IS_DEBUG == true ]]; then
         -it \
         -v .:/cse-cnagc \
         -e ATEN_CPU_CAPABILITY=${ISA_TYPE} \
-        -v ./fastchat:/fastchat \
+        -v ./fastchat:/home/ubuntu/fastchat \
         -v $MODEL_PATH:/model/ \
         -v ./container/cnagc-fastchat/start-chat.sh:/start-chat.sh \
         ${REGISTER}${CONTAINER_NAME}:${TAG} \
@@ -91,11 +91,11 @@ else
         -it \
         -v .:/cse-cnagc \
         -e ATEN_CPU_CAPABILITY=${ISA_TYPE} \
-        -v ./fastchat:/fastchat \
-        -v $MODEL_PATH:/model/ \
-        -v ./container/cnagc-fastchat/start-chat.sh:/start-chat.sh \
+        -v ./fastchat:/home/ubuntu/fastchat \
+        -v $MODEL_PATH:/home/ubuntu/model/ \
+        -v ./container/cnagc-fastchat/start-chat.sh:/home/ubuntu/start-chat.sh \
         ${REGISTER}${CONTAINER_NAME}:${TAG} \
-        /start-chat.sh -m /model/ -r /fastchat
+        /home/ubuntu/start-chat.sh -m /home/ubuntu/model/ -r /home/ubuntu/fastchat
 fi
 
 

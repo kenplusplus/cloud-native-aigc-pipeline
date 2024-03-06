@@ -54,7 +54,7 @@ process_args "$@"
 
 echo "Check ISA from envrionment: ATEN_CPU_CAPABILITY=${ATEN_CPU_CAPABILITY}"
 echo "Check ISA from pytorch:"
-/opt/conda/bin/python -c 'import intel_extension_for_pytorch._C as core;print(core._get_current_isa_level())'
+/home/ubuntu/miniconda3/envs/py310/bin/python -c 'import intel_extension_for_pytorch._C as core;print(core._get_current_isa_level())'
 
 #export OMP_NUM_THREADS=1
 #export KMP_BLOCKTIME=1
@@ -62,7 +62,7 @@ echo "Check ISA from pytorch:"
 #export GOMP_CPU_AFFINITY="0-3"
 #export OMP_PROC_BIND=CLOSE
 #export OMP_SCHEDULE=STATIC
-export LD_PRELOAD=/opt/conda/lib/libiomp5.so:/usr/lib/x86_64-linux-gnu/libtcmalloc.so
+#export LD_PRELOAD=/opt/conda/lib/libiomp5.so:/usr/lib/x86_64-linux-gnu/libtcmalloc.so
 
 cd ${FASTCHAT_ROOT}
-/opt/conda/bin/python -m fastchat.serve.cli --model-path ${MODEL_PATH} --device cpu --debug
+/home/ubuntu/miniconda3/envs/py310/bin/python -m fastchat.serve.cli --model-path ${MODEL_PATH} --device cpu --debug
