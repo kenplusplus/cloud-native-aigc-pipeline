@@ -6,7 +6,7 @@ MODEL_PATH=""
 REGISTER="gar-registry.caas.intel.com/cpio/"
 CONTAINER_NAME="cnagc-fastchat"
 IS_DEBUG=false
-TAG="v2.0.100-cpu"
+TAG="v2.2.0-cpu"
 
 info() {
     echo -e "\e[1;33mINFO: $*\e[0;0m"

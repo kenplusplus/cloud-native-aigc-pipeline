@@ -4,63 +4,40 @@ This project is to bring AIGC to Kubernetes via cloud native stateless design.
 
 ## 1. Download Models
 
-The pre-trained models were at http://css-devops.sh.intel.com/download/aigc/models/
+- To download  model from huggingface
 
-- To download  model:
-
-```
-./models/get_models.sh opt-1.3b-bf16-8b-samples
-```
-
-- To download all models:
-
-```
-./models/get_models.sh all
+```shell
+# Llama-2-7b-chat-hf-sharded-bf16
+cd models
+git lfs install
+git clone https://huggingface.co/Trelis/Llama-2-7b-chat-hf-sharded-bf16
 ```
 
 ## 2. Getting Start to Run in Container
 
 1. Build container `gar-registry.caas.intel.com/cpio/cnagc-fastchat`
 
-```
+```shell
 ./container-build.sh -c cnagc-fastchat
-```
-
-There are following tags, the default one is `2.0.100-cpu`
-
-| | llm-cpu | v2.0.100-cpu | v2.0.110-xpu |
-| -- | -- | -- | -- |
-| tag | [v2.1.0.dev+cpu.llm](https://github.com/intel/intel-extension-for-pytorch/tree/v2.1.0.dev+cpu.llm) | [v2.0.100+cpu](https://github.com/intel/intel-extension-for-pytorch/releases/tag/v2.0.100%2Bcpu) | [v2.0.110+xpu](https://github.com/intel/intel-extension-for-pytorch/tree/v2.0.110+xpu) |
-| Accelerator | CPU | CPU | GPU/CPU |
-| Stable | No | Good | Good |
-| AMX work | No | Work | ? |
-| Size | 3G | 5G | 26 G|
-| OneAPI base | No | No | Yes |
-| CPIO Registry | Yes | Yes | No, too big|
-
-To use them please:
-```
-docker pull gar-registry.caas.intel.com/cpio/cnagc-fastchat:v2.0.100-cpu
-docker pull gar-registry.caas.intel.com/cpio/cnagc-fastchat:v2.0.110-xpu
 ```
 
 2. Run cloud native AIGC container with given model
 
-```
-./docker-runchat.sh -m models/vicuna-7b-v1.3
+```shell
+./docker-runchat.sh -m models/Llama-2-7b-chat-hf-sharded-bf16
 ```
 
 3. Use different ISA
 
 - use AVX512
 
-```
+```shell
 ./docker-runchat.sh -m models/vicuna-7b-v1.3 -i avx512
 ```
 
 - use AMX
 
-```
+```shell
 ./docker-runchat.sh -m models/vicuna-7b-v1.3 -i amx
 ```
 
@@ -87,7 +64,7 @@ kubectl apply -k kustomization.yaml
 ```
 Deploy Prometheus operator:
 
-Follow guide [here](https://sustainable-computing.io/installation/kepler/#deploy-the-prometheus-operator). 
+Follow guide [here](https://sustainable-computing.io/installation/kepler/#deploy-the-prometheus-operator).
 
 The `git clone` step is not needed, since `kube-proemetheus` has been one of the sub-modules of `cse-cnagc` repo.
 

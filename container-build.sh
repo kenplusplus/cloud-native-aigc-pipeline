@@ -2,11 +2,11 @@
 
 CURR_DIR=$(readlink -f "$(dirname "$0")")
 
-REGISTER="gar-registry.caas.intel.com/cpio/"
+REGISTER="bluewish/"
 CONTAINER_NAME="cnagc-fastchat"
 CNAGC_FASTCHAT_ROOT=${CURR_DIR}/container/cnagc-fastchat
 CNAGC_FASTCHAT_K8S_ROOT=${CURR_DIR}/container/cnagc-fastchat-k8s
-
+TAG="v2.2.0-cpu"
 
 usage() {
     cat << EOM
@@ -38,26 +38,19 @@ build() {
         cnagc-fastchat)
             echo "Build container cnagc-fastchat..."
 
-            docker build \
-                -f ${CNAGC_FASTCHAT_ROOT}/Dockerfile.compile \
-                --target dev \
-                --progress plain \
-                -t ${REGISTER}${CONTAINER_NAME}:llm-cpu \
-                .
+            cd ${CURR_DIR}/intel-extension-for-pytorch/
+            git checkout v2.2.0+cpu
+            git submodule sync
+            git submodule update --init --recursive
+            DOCKER_BUILDKIT=1 docker build -f examples/cpu/inference/python/llm/Dockerfile -t ipex-llm:2.2.0 .
 
+            cd ${CURR_DIR}
             docker build \
                 -f ${CNAGC_FASTCHAT_ROOT}/Dockerfile.release \
                 --progress plain \
-                --target v2.0.100-cpu \
-                -t ${REGISTER}${CONTAINER_NAME}:v2.0.100-cpu \
+                -t ${REGISTER}${CONTAINER_NAME}:${TAG} \
                 .
 
-            docker build \
-                -f ${CNAGC_FASTCHAT_ROOT}/Dockerfile.release \
-                --progress plain \
-                --target v2.0.110-xpu \
-                -t ${REGISTER}${CONTAINER_NAME}:v2.0.110-xpu \
-                .
             ;;
         cnagc-fastchat-k8s)
             echo "Build container cnagc-fastchat-k8s..."

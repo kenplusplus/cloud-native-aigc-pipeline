@@ -1,68 +1,12 @@
-FROM ubuntu:22.04 as base
+FROM ipex-llm:2.2.0
 
-RUN echo "deb http://linux-ftp.sh.intel.com/pub/mirrors/ubuntu/ $(. /etc/os-release && echo $VERSION_CODENAME) main restricted universe multiverse" \
-        > /etc/apt/sources.list && \
-    echo "deb http://linux-ftp.sh.intel.com/pub/mirrors/ubuntu/ $(. /etc/os-release && echo $VERSION_CODENAME)-updates main restricted universe multiverse" \
-        >> /etc/apt/sources.list && \
-    echo "deb http://linux-ftp.sh.intel.com/pub/mirrors/ubuntu/ $(. /etc/os-release && echo $VERSION_CODENAME)-security main restricted universe multiverse" \
-        >> /etc/apt/sources.list
+USER ubuntu
 
-RUN --mount=type=cache,id=apt-dev,target=/var/cache/apt \
-    apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
-    ca-certificates \
-    git \
-    curl \
-    vim \
-    build-essential \
-    ccache \
-    libgoogle-perftools-dev \
-    numactl \
-    cmake \
-    libjpeg-dev \
-    pybind11-dev \
-    libpng-dev \
-    pybind11-dev \
-    wget \
-    && rm -rf /var/lib/apt/lists/*
+ADD container/cnagc-fastchat/.condarc /home/ubuntu/miniconda3/.condarc
+RUN /home/ubuntu/miniconda3/bin/conda init bash
+COPY --chown=ubuntu:ubuntu fastchat/ /home/ubuntu/fastchat
+COPY --chown=ubuntu:ubuntu container/cnagc-fastchat/pip.conf /home/ubuntu/.pip/pip.conf
+RUN /home/ubuntu/miniconda3/envs/py310/bin/python -m pip install -e /home/ubuntu/fastchat/".[model_worker,webui]"
 
-RUN curl -fsSL -v -o ~/miniconda.sh -O  https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh  && \
-    chmod +x ~/miniconda.sh && \
-    ~/miniconda.sh -b -p /opt/conda && \
-    rm ~/miniconda.sh
-
-ADD container/cnagc-fastchat/.condarc /opt/conda/.condarc
-RUN /opt/conda/bin/conda init bash
-RUN /opt/conda/bin/conda install -y python=3.10 conda-build pyyaml numpy ipython mkl mkl-include ninja cython typing pybind11 Pillow && \
-    /opt/conda/bin/conda clean -ya
-
-ADD fastchat/ /fastchat
-
-# =======
-
-FROM base as v2.0.100-cpu
-
-RUN /opt/conda/bin/python -m pip install torch==2.0.1+cpu torchvision==0.15.2+cpu -f http://css-devops.sh.intel.com/download/mirror/torch/ --trusted-host css-devops.sh.intel.com
-RUN /opt/conda/bin/python -m pip install intel_extension_for_pytorch==2.0.100 prometheus_client protobuf
-RUN /opt/conda/bin/python -m pip install -e /fastchat/".[model_worker,webui]"
-
-# =======
-
-FROM base as v2.0.110-xpu
-
-# Install OneAPI basekit 2023.2.0
-RUN wget https://registrationcenter-download.intel.com/akdlm/IRC_NAS/992857b9-624c-45de-9701-f6445d845359/l_BaseKit_p_2023.2.0.49397.sh
-RUN chmod +x ./l_BaseKit_p_2023.2.0.49397.sh && ./l_BaseKit_p_2023.2.0.49397.sh -a --silent --eula accept
-RUN wget https://github.com/oneapi-src/level-zero/releases/download/v1.13.1/level-zero_1.13.1+u22.04_amd64.deb
-RUN wget https://github.com/oneapi-src/level-zero/releases/download/v1.13.1/level-zero-devel_1.13.1+u22.04_amd64.deb
-RUN dpkg -i level-zero_1.13.1+u22.04_amd64.deb && dpkg -i level-zero-devel_1.13.1+u22.04_amd64.deb
-
-ENV LD_LIBRARY_PATH=/opt/intel/oneapi/mkl/2023.2.0/lib/intel64/:\
-/opt/intel/oneapi/compiler/2023.2.0/linux/lib/:\
-/opt/intel/oneapi/compiler/2023.2.0/linux/compiler/lib/intel64_lin/:\
-/opt/conda/lib
-
-RUN /opt/conda/bin/python -m pip install torch==2.0.1a0 torchvision==0.15.2a0 \
-    intel_extension_for_pytorch==2.0.110+xpu \
-    -f https://developer.intel.com/ipex-whl-stable-xpu
-RUN /opt/conda/bin/python -m pip install -e /fastchat/".[model_worker,webui]"
+RUN echo "/home/ubuntu/miniconda3/bin/conda init bash" >> ./.bashrc
+RUN echo "/home/ubuntu/miniconda3/bin/conda activate py310" >> ./.bashrc
