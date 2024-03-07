@@ -4,9 +4,9 @@ This project is to bring AIGC to Kubernetes via cloud native stateless design.
 
 ## 1. Download Models
 
-You can download model from huggingface.
+You can download model from `hugging face`.
 
-- BF16 model for AMX optimization
+- BF16 model for `AMX` optimization
 
     ```shell
     # Llama-2-7b-chat-hf-sharded-bf16
@@ -15,7 +15,7 @@ You can download model from huggingface.
     git clone https://huggingface.co/Trelis/Llama-2-7b-chat-hf-sharded-bf16
     ```
 
-- INT8 model for INT8 optimization
+- INT8 model for `VNNI` optimization
 
     ```shell
     # vicuna-7b-v1.3
@@ -95,7 +95,7 @@ docker pull bluewish/cnagc-fastchat:v2.2.0-cpu
    By default controller will serve at `localhost:21001` or `10.0.0.100:21001` if
    the host IP address is `10.0.0.100`
 
-3. Run local UI server
+3. Run UI server
 
    ```shell
    # specify the controller service address, it should be same host IP address
