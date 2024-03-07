@@ -7,6 +7,7 @@ REGISTER="bluewish/"
 CONTAINER_NAME="cnagc-fastchat"
 IS_DEBUG=false
 TAG="v2.2.0-cpu"
+TYPE="direct"
 
 info() {
     echo -e "\e[1;33mINFO: $*\e[0;0m"

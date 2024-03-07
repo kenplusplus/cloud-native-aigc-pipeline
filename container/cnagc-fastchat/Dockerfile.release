@@ -7,6 +7,7 @@ RUN /home/ubuntu/miniconda3/bin/conda init bash
 COPY --chown=ubuntu:ubuntu fastchat/ /home/ubuntu/fastchat
 COPY --chown=ubuntu:ubuntu container/cnagc-fastchat/pip.conf /home/ubuntu/.pip/pip.conf
 RUN /home/ubuntu/miniconda3/envs/py310/bin/python -m pip install -e /home/ubuntu/fastchat/".[model_worker,webui]"
+RUN /home/ubuntu/miniconda3/envs/py310/bin/python -m pip install plotly
 
 RUN echo "/home/ubuntu/miniconda3/bin/conda init bash" >> ./.bashrc
 RUN echo "/home/ubuntu/miniconda3/bin/conda activate py310" >> ./.bashrc
