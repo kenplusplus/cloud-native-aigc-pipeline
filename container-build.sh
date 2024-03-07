@@ -17,9 +17,10 @@ EOM
 }
 
 process_args() {
-    while getopts ":c:fh" option; do
+    while getopts ":c:r:fh" option; do
         case "$option" in
             c) CONTAINER_NAME=$OPTARG;;
+            r) REGISTER=$OPTARG;;
             f) FORCE=true;;
             h) usage
                exit 0
