@@ -4,12 +4,19 @@ FASTCHAT_ROOT=""
 MODEL_PATH=""
 RUNTYPE="cli"
 PYTHONEXEC="/home/ubuntu/miniconda3/envs/py310/bin/python"
+# Please customize below settings via environment variable but not command
+# line's argument
+ATEN_CPU_CAPABILITY=${ATEN_CPU_CAPABILITY:-AVX2}
+CONTROLLER_SVC=${CONTROLLER_SVC:-localhost}
+CONTROLLER_PORT=${CONTROLLER_PORT:-21001}
+UI_PORT=${UI_PORT:-9000}
 
 usage() {
     cat << EOM
 Usage: $(basename "$0") [OPTION]...
   -m <model path>       Directory name of model path
   -r <fastchat root>    Root directory of fastchat
+  -t [cli|controller|apiserver|ui|worker] Run type of fastchat
   -h                    Show this help
 EOM
 }
@@ -30,7 +37,7 @@ process_args() {
     done
 
     if [[ -z ${FASTCHAT_ROOT} ]]; then
-        error "Please specify the fastchat root path via -m"
+        error "Please specify the fastchat root path via -r"
     else
         FASTCHAT_ROOT=$(readlink -f ${FASTCHAT_ROOT})
         echo "FASTCHAT_ROOT: ${FASTCHAT_ROOT}..."
@@ -40,6 +47,10 @@ process_args() {
         fi
     fi
 
+
+}
+
+check_model_path() {
     if [[ -z ${MODEL_PATH} ]]; then
         error "Please specify the model path via -m"
     else
@@ -54,11 +65,30 @@ process_args() {
 
 run_cli() {
     echo "Start fastchat CLI ..."
+    check_model_path
     cd ${FASTCHAT_ROOT}
     ${PYTHONEXEC} -m fastchat.serve.cli --model-path ${MODEL_PATH} --device cpu --debug
 }
 
+run_controller() {
+    echo "Start fastchat controller ..."
+    cd ${FASTCHAT_ROOT}
+    ${PYTHONEXEC} -m fastchat.serve.controller \
+        --host 0.0.0.0 --port "${CONTROLLER_PORT}"
+}
 
+run_ui() {
+    echo "Start fastchat UI..."
+    cd ${FASTCHAT_ROOT}
+    ${PYTHONEXEC} -m fastchat.serve.gradio_web_server_multi \
+        --controller-url http://"${CONTROLLER_SVC}":"${CONTROLLER_PORT}" \
+        --host 0.0.0.0 --port "${UI_PORT}" \
+        --model-list-mode reload
+}
+
+error() {
+    echo "ERROR: $1"
+}
 process_args "$@"
 
 echo "Check ISA from envrionment: ATEN_CPU_CAPABILITY=${ATEN_CPU_CAPABILITY}"
@@ -76,6 +106,12 @@ echo "Check ISA from pytorch:"
 case ${RUNTYPE} in
     "cli")
         run_cli
+        ;;
+    "controller")
+        run_controller
+        ;;
+    "ui")
+        run_ui
         ;;
     *)
         error "Invalid run type ${RUNTYPE}"
