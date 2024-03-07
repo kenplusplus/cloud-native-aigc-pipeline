@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -ex
+
 FASTCHAT_ROOT=""
 MODEL_PATH=""
 RUNTYPE="cli"
@@ -10,15 +12,22 @@ ATEN_CPU_CAPABILITY=${ATEN_CPU_CAPABILITY:-AVX2}
 CONTROLLER_SVC=${CONTROLLER_SVC:-localhost}
 CONTROLLER_PORT=${CONTROLLER_PORT:-21001}
 UI_PORT=${UI_PORT:-9000}
+MODEL_WORKER_SVC=${MODEL_WORKER_SVC:-localhost}
+MODEL_WORKER_PORT=${MODEL_WORKER_PORT:-21002}
+CPU_ISA="avx2"
 
 usage() {
     cat << EOM
 Usage: $(basename "$0") [OPTION]...
   -m <model path>       Directory name of model path
   -r <fastchat root>    Root directory of fastchat
-  -t [cli|controller|apiserver|ui|worker] Run type of fastchat
+  -t [cli|controller|apiserver|ui|model] Run type of fastchat
   -h                    Show this help
 EOM
+}
+
+error() {
+    echo "ERROR: $1"
 }
 
 process_args() {
@@ -86,14 +95,24 @@ run_ui() {
         --model-list-mode reload
 }
 
-error() {
-    echo "ERROR: $1"
+run_model() {
+    echo "Start fastchat model..."
+
+    echo "Check ISA from envrionment: ATEN_CPU_CAPABILITY=${ATEN_CPU_CAPABILITY}"
+    echo "Check ISA from pytorch:"
+    ${PYTHONEXEC} -c 'import intel_extension_for_pytorch._C as core;print(core._get_current_isa_level())'
+
+    ${PYTHONEXEC} -m fastchat.serve.model_worker \
+        --model-path "${MODEL_PATH}" \
+        --model-names "${MODEL_NAME}-${CPU_ISA}" \
+        --worker-address http://"${MODEL_WORKER_SVC}":"${MODEL_WORKER_PORT}" \
+        --controller-address http://"${CONTROLLER_SVC}":"${CONTROLLER_PORT}" \
+        --host 0.0.0.0 --port "${MODEL_WORKER_PORT}" \
+        --device cpu
 }
+
 process_args "$@"
 
-echo "Check ISA from envrionment: ATEN_CPU_CAPABILITY=${ATEN_CPU_CAPABILITY}"
-echo "Check ISA from pytorch:"
-/home/ubuntu/miniconda3/envs/py310/bin/python -c 'import intel_extension_for_pytorch._C as core;print(core._get_current_isa_level())'
 
 #export OMP_NUM_THREADS=1
 #export KMP_BLOCKTIME=1
@@ -112,6 +131,9 @@ case ${RUNTYPE} in
         ;;
     "ui")
         run_ui
+        ;;
+    "model")
+        run_model
         ;;
     *)
         error "Invalid run type ${RUNTYPE}"

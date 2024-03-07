@@ -12,6 +12,8 @@ RUNTYPE="cli"
 CONTROLLER_SVC=${CONTROLLER_SVC:-localhost}
 CONTROLLER_PORT=${CONTROLLER_PORT:-21001}
 UI_PORT=${UI_PORT:-9000}
+MODEL_WORKER_SVC=${MODEL_WORKER_SVC:-localhost}
+MODEL_WORKER_PORT=${MODEL_WORKER_PORT:-21002}
 
 info() {
     echo -e "\e[1;33mINFO: $*\e[0;0m"
@@ -35,7 +37,7 @@ usage() {
 Usage: $(basename "$0") [OPTION]...
   -i <ISA type>                             [avx2|avx512|amx]
   -m <model path>                           Directory name of model path
-  -t [cli|controller|apiserver|ui|worker]   Run type for docker based fastchat
+  -t [cli|controller|apiserver|ui|model]   Run type for docker based fastchat
   -p <Controller Port>                      Controller port, default is 21000
   -u <UI Port>                              UI port, default is 9000
   -d                                        Interactive debug mode
@@ -111,7 +113,6 @@ run_controller() {
         -it \
         -v .:/cse-cnagc \
         -p ${CONTROLLER_PORT}:${CONTROLLER_PORT} \
-        -e ATEN_CPU_CAPABILITY=${ISA_TYPE} \
         -e CONTROLLER_PORT=${CONTROLLER_PORT} \
         -v ./fastchat:/home/ubuntu/fastchat \
         -v ./container/cnagc-fastchat/start-chat.sh:/home/ubuntu/start-chat.sh \
@@ -139,10 +140,46 @@ run_ui() {
         /home/ubuntu/start-chat.sh -r /home/ubuntu/fastchat -t ui
 }
 
+run_model() {
+    info "Starting model on port ${MODEL_WORKER_PORT}..."
+
+    if [ -z "${MODEL_PATH}" ]; then
+        error "Please specify MODEL_PATH via -m"
+    fi
+
+    if [ -z "${MODEL_NAME}" ]; then
+        MODEL_NAME=$(basename ${MODEL_PATH})
+    fi
+
+    if [ ${CONTROLLER_SVC} = "localhost" ]; then
+        error "Env CONTROLLER_SVC should not be localhost, it could be host's IP address or DNS name."
+    fi
+
+    if [ ${MODEL_WORKER_SVC} = "localhost" ]; then
+        error "Env MODEL_WORKER_SVC should not be localhost, it could be host's IP address or DNS name."
+    fi
+
+    docker run \
+        -it \
+        -v .:/cse-cnagc \
+        -v ${MODEL_PATH}:/home/ubuntu/model \
+        -p ${MODEL_WORKER_PORT}:${MODEL_WORKER_PORT} \
+        -e ATEN_CPU_CAPABILITY=${ISA_TYPE} \
+        -e CPU_ISA=${ISA_TYPE} \
+        -e MODEL_NAME=${MODEL_NAME} \
+        -e MODEL_WORKER_SVC=${MODEL_WORKER_SVC} \
+        -e CONTROLLER_SVC=${CONTROLLER_SVC} \
+        -e CONTROLLER_PORT=${CONTROLLER_PORT} \
+        -v ./fastchat:/home/ubuntu/fastchat \
+        -v ./container/cnagc-fastchat/start-chat.sh:/home/ubuntu/start-chat.sh \
+        ${REGISTER}${CONTAINER_NAME}:${TAG} \
+        /home/ubuntu/start-chat.sh -r /home/ubuntu/fastchat -t model -m /home/ubuntu/model/
+}
+
 process_args "$@"
 
 echo "======================================="
-echo " Model        : $MODEL_PATH"
+echo " Model        : ${MODEL_PATH}"
 echo " Container    : ${REGISTER}${CONTAINER_NAME}:${TAG}"
 echo " ISA          : ${ISA_TYPE}"
 echo " Run Type     : ${RUNTYPE}"
@@ -159,6 +196,9 @@ case ${RUNTYPE} in
         ;;
     "ui")
         run_ui
+        ;;
+    "model")
+        run_model
         ;;
     *)
         error "Invalid run type ${RUNTYPE}"
