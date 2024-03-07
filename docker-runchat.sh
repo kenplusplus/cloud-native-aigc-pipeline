@@ -14,6 +14,7 @@ CONTROLLER_PORT=${CONTROLLER_PORT:-21001}
 UI_PORT=${UI_PORT:-9000}
 MODEL_WORKER_SVC=${MODEL_WORKER_SVC:-localhost}
 MODEL_WORKER_PORT=${MODEL_WORKER_PORT:-21002}
+OPENAI_API_PORT=${OPENAI_API_PORT:-8000}
 
 info() {
     echo -e "\e[1;33mINFO: $*\e[0;0m"
@@ -168,12 +169,30 @@ run_model() {
         -e CPU_ISA=${ISA_TYPE} \
         -e MODEL_NAME=${MODEL_NAME} \
         -e MODEL_WORKER_SVC=${MODEL_WORKER_SVC} \
+        -e MODEL_WORKER_PORT=${MODEL_WORKER_PORT} \
         -e CONTROLLER_SVC=${CONTROLLER_SVC} \
         -e CONTROLLER_PORT=${CONTROLLER_PORT} \
         -v ./fastchat:/home/ubuntu/fastchat \
         -v ./container/cnagc-fastchat/start-chat.sh:/home/ubuntu/start-chat.sh \
         ${REGISTER}${CONTAINER_NAME}:${TAG} \
         /home/ubuntu/start-chat.sh -r /home/ubuntu/fastchat -t model -m /home/ubuntu/model/
+}
+
+run_openai_apiserver() {
+    if [ ${CONTROLLER_SVC} = "localhost" ]; then
+        error "Env CONTROLLER_SVC should not be localhost, it could be host's IP address or DNS name."
+    fi
+
+    docker run \
+        -it \
+        -p ${OPENAI_API_PORT}:${OPENAI_API_PORT} \
+        -e CONTROLLER_SVC=${CONTROLLER_SVC} \
+        -e CONTROLLER_PORT=${CONTROLLER_PORT} \
+        -e OPENAI_API_PORT=${OPENAI_API_PORT} \
+        -v ./fastchat:/home/ubuntu/fastchat \
+        -v ./container/cnagc-fastchat/start-chat.sh:/home/ubuntu/start-chat.sh \
+        ${REGISTER}${CONTAINER_NAME}:${TAG} \
+        /home/ubuntu/start-chat.sh -r /home/ubuntu/fastchat -t apiserver
 }
 
 process_args "$@"
@@ -185,7 +204,6 @@ echo " ISA          : ${ISA_TYPE}"
 echo " Run Type     : ${RUNTYPE}"
 echo " Debug        : ${IS_DEBUG}"
 echo "======================================="
-
 
 case ${RUNTYPE} in
     "cli")
@@ -199,6 +217,9 @@ case ${RUNTYPE} in
         ;;
     "model")
         run_model
+        ;;
+    "apiserver")
+        run_openai_apiserver
         ;;
     *)
         error "Invalid run type ${RUNTYPE}"

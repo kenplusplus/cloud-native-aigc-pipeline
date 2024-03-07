@@ -1,5 +1,15 @@
 FROM ipex-llm:2.2.0
 
+# You can follow the official step to create ipex-llm:2.2.0 container via following
+# steps:
+#
+# cd ${CURR_DIR}/intel-extension-for-pytorch/
+# git checkout v2.2.0+cpu
+# git submodule sync
+# git submodule update --init --recursive
+# DOCKER_BUILDKIT=1 docker build -f examples/cpu/inference/python/llm/Dockerfile -t ipex-llm:2.2.0 .
+#
+
 USER ubuntu
 
 ADD container/cnagc-fastchat/.condarc /home/ubuntu/miniconda3/.condarc
