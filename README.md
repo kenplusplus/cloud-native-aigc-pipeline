@@ -32,11 +32,17 @@ You can download model from huggingface.
 ./container-build.sh -c cnagc-fastchat
 ```
 
-By default it will use `bluewish/` as register, if you want to change to your
+By default it will use `bluewish/` as [registry](https://hub.docker.com/repository/docker/bluewish/cnagc-fastchat/general), if you want to change to your
 own like <xxxx.com>/, please use `-r <xxxx.com>/` option.
 
 ```shell
-./container-build.sh -c cnagc-fastchat -r "<xxxx,.com>/"
+./container-build.sh -c cnagc-fastchat -r "<xxxx.com>/"
+```
+
+If you do not want to build container from scratch, you can just pull
+
+```shell
+docker pull bluewish/cnagc-fastchat:v2.2.0-cpu
 ```
 
 ### 2.2 Run chatbot via interactive console directly
@@ -53,7 +59,7 @@ own like <xxxx.com>/, please use `-r <xxxx.com>/` option.
 
 ### 2.3 Run Chatbot server and export OpenAI API
 
-```
+```diagram
         +--------------------------+      +------------------------+
         |         UI Server        |      |    OpenAI API Server   |
         |  http://10.0.0.100:9000  |      | http://10.0.0.100:8000 |
@@ -85,6 +91,7 @@ own like <xxxx.com>/, please use `-r <xxxx.com>/` option.
    ```shell
    ./docker-runchat.sh -t controller
    ```
+
    By default controller will serve at `localhost:21001` or `10.0.0.100:21001` if
    the host IP address is `10.0.0.100`
 
@@ -97,6 +104,7 @@ own like <xxxx.com>/, please use `-r <xxxx.com>/` option.
    export CONTROLLER_PORT=21001
    ./docker-runchat.sh -t ui
    ```
+
    By default UI web will serve at `http://localhost:9000` or `http://10.0.0.100:9000`
    if the host IP address is `10.0.0.100`. You can open it in browser.
 
@@ -113,8 +121,8 @@ own like <xxxx.com>/, please use `-r <xxxx.com>/` option.
    export MODEL_WORKER_SVC=10.0.0.100
 
    # specify the model worker port, default is 21002. If register the second
-   # model woker, please choose new port like 21003, 21004, 21005 etc
-   export MODEL_WOKER_PORT=21002
+   # model worker, please choose new port like 21003, 21004, 21005 etc
+   export MODEL_WORKER_PORT=21002
 
    ./docker-runchat.sh -t model -m ./models/vicuna-7b-v1.3/ -i avx2
 
@@ -122,6 +130,7 @@ own like <xxxx.com>/, please use `-r <xxxx.com>/` option.
 
    ./docker-runchat.sh -t model -m ./models/Llama-2-7b-chat-hf-sharded-bf16/ -i amx
     ```
+
 5. Run OPENAI API server
 
     ```shell
@@ -133,12 +142,13 @@ own like <xxxx.com>/, please use `-r <xxxx.com>/` option.
 
     ./docker-runchat.sh -t apiserver
     ```
+
 After running above services via docker directly, please use following approach
 to communicate:
 
-- Approach 1: Just open `http://localhost:9000` or `http://10.0.0.100:9000` in
+- **Approach 1**: Just open `http://localhost:9000` or `http://10.0.0.100:9000` in
   your web browser, and play with it
-- Approach 2: Use OpenAPI API to send curl:
+- **Approach 2**: Use OpenAPI API to send curl:
 
     ```shell
     curl http://localhost:8000/v1/completions \
@@ -150,12 +160,17 @@ to communicate:
         "temperature": 0.5
     }'
     ```
-- Approach 3: Use OpenAPI API to write python code:
-    Install
-    ```
+
+- **Approach 3**: Use OpenAPI API to write python code:
+
+    Install `openai` python package
+
+    ```shell
     pip install --upgrade openai
     ```
+
     Python code is as follows:
+
     ```python
     import openai
 
