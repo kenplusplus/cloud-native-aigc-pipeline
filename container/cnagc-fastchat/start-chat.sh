@@ -2,6 +2,8 @@
 
 FASTCHAT_ROOT=""
 MODEL_PATH=""
+RUNTYPE="cli"
+PYTHONEXEC="/home/ubuntu/miniconda3/envs/py310/bin/python"
 
 usage() {
     cat << EOM
@@ -13,9 +15,10 @@ EOM
 }
 
 process_args() {
-    while getopts ":r:m:h" option; do
+    while getopts ":r:m:t:h" option; do
         case "$option" in
             m) MODEL_PATH=$OPTARG;;
+            t) RUNTYPE=$OPTARG;;
             r) FASTCHAT_ROOT=$OPTARG;;
             h) usage
                exit 0
@@ -49,7 +52,13 @@ process_args() {
     fi
 }
 
-echo "Start fastchat ..."
+run_cli() {
+    echo "Start fastchat CLI ..."
+    cd ${FASTCHAT_ROOT}
+    ${PYTHONEXEC} -m fastchat.serve.cli --model-path ${MODEL_PATH} --device cpu --debug
+}
+
+
 process_args "$@"
 
 echo "Check ISA from envrionment: ATEN_CPU_CAPABILITY=${ATEN_CPU_CAPABILITY}"
@@ -64,5 +73,11 @@ echo "Check ISA from pytorch:"
 #export OMP_SCHEDULE=STATIC
 #export LD_PRELOAD=/opt/conda/lib/libiomp5.so:/usr/lib/x86_64-linux-gnu/libtcmalloc.so
 
-cd ${FASTCHAT_ROOT}
-/home/ubuntu/miniconda3/envs/py310/bin/python -m fastchat.serve.cli --model-path ${MODEL_PATH} --device cpu --debug
+case ${RUNTYPE} in
+    "cli")
+        run_cli
+        ;;
+    *)
+        error "Invalid run type ${RUNTYPE}"
+        ;;
+esac

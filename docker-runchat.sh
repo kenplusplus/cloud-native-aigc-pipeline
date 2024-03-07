@@ -7,7 +7,7 @@ REGISTER="bluewish/"
 CONTAINER_NAME="cnagc-fastchat"
 IS_DEBUG=false
 TAG="v2.2.0-cpu"
-TYPE="direct"
+RUNTYPE="cli"
 
 info() {
     echo -e "\e[1;33mINFO: $*\e[0;0m"
@@ -31,8 +31,9 @@ usage() {
 Usage: $(basename "$0") [OPTION]...
   -i <ISA type>     [avx2|avx512|amx]
   -m <model path>   Directory name of model path
-  -t <tag>          [llm-cpu|v2.0.100-cpu|v2.0.110-xpu], default is v2.0.100-cpu
+  -t [cli|controller|worker] Run t
   -d                Interactive debug mode
+  -r
   -h                Show this help
 EOM
 }
@@ -42,7 +43,7 @@ process_args() {
         case "$option" in
             i) ISA_TYPE=$OPTARG;;
             m) MODEL_PATH=$OPTARG;;
-            t) TAG=$OPTARG;;
+            t) RUNTYPE=$OPTARG;;
             d) IS_DEBUG=true;;
             h) usage
                exit 0
@@ -66,7 +67,31 @@ process_args() {
     fi
 }
 
-echo "Start run chat in docker ..."
+run_cli() {
+    echo "Start run chat CLI mode in docker ..."
+
+    if [[ $IS_DEBUG == true ]]; then
+        docker run \
+            -it \
+            -v .:/cse-cnagc \
+            -e ATEN_CPU_CAPABILITY=${ISA_TYPE} \
+            -v ./fastchat:/home/ubuntu/fastchat \
+            -v $MODEL_PATH:/home/ubuntu/model/ \
+            -v ./container/cnagc-fastchat/start-chat.sh:/home/ubuntu/start-chat.sh \
+            ${REGISTER}${CONTAINER_NAME}:${TAG} \
+            /bin/bash
+    else
+        docker run \
+            -it \
+            -v .:/cse-cnagc \
+            -e ATEN_CPU_CAPABILITY=${ISA_TYPE} \
+            -v ./fastchat:/home/ubuntu/fastchat \
+            -v $MODEL_PATH:/home/ubuntu/model/ \
+            -v ./container/cnagc-fastchat/start-chat.sh:/home/ubuntu/start-chat.sh \
+            ${REGISTER}${CONTAINER_NAME}:${TAG} \
+            /home/ubuntu/start-chat.sh -m /home/ubuntu/model/ -r /home/ubuntu/fastchat
+    fi
+}
 
 process_args "$@"
 
@@ -74,29 +99,19 @@ echo "======================================="
 echo " Model        : $MODEL_PATH"
 echo " Container    : ${REGISTER}${CONTAINER_NAME}:${TAG}"
 echo " ISA          : ${ISA_TYPE}"
-echo " Debug        : $IS_DEBUG"
+echo " Run Type     : ${RUNTYPE}"
+echo " Debug        : ${IS_DEBUG}"
 echo "======================================="
 
-if [[ $IS_DEBUG == true ]]; then
-    docker run \
-        -it \
-        -v .:/cse-cnagc \
-        -e ATEN_CPU_CAPABILITY=${ISA_TYPE} \
-        -v ./fastchat:/home/ubuntu/fastchat \
-        -v $MODEL_PATH:/model/ \
-        -v ./container/cnagc-fastchat/start-chat.sh:/start-chat.sh \
-        ${REGISTER}${CONTAINER_NAME}:${TAG} \
-        /bin/bash
-else
-    docker run \
-        -it \
-        -v .:/cse-cnagc \
-        -e ATEN_CPU_CAPABILITY=${ISA_TYPE} \
-        -v ./fastchat:/home/ubuntu/fastchat \
-        -v $MODEL_PATH:/home/ubuntu/model/ \
-        -v ./container/cnagc-fastchat/start-chat.sh:/home/ubuntu/start-chat.sh \
-        ${REGISTER}${CONTAINER_NAME}:${TAG} \
-        /home/ubuntu/start-chat.sh -m /home/ubuntu/model/ -r /home/ubuntu/fastchat
-fi
+
+case ${RUNTYPE} in
+    "cli")
+        run_cli
+        ;;
+    *)
+        error "Invalid run type ${RUNTYPE}"
+        ;;
+esac
+
 
 
