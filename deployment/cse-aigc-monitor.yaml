@@ -2,7 +2,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: cse-aigc-model-worker-non
-  namespace: non
+  namespace: aigc-non
   labels:
     service-monitor: cse-aigc-model-worker-non
 spec:
@@ -18,7 +18,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: cse-aigc-model-worker-amx
-  namespace: amx
+  namespace: aigc-amx
   labels:
     service-monitor: cse-aigc-model-worker-amx
 spec:
