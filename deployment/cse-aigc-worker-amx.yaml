@@ -13,6 +13,8 @@ spec:
       labels:
         app: cse-aigc-model-worker-amx
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: smgaigc-ivory2-0
       containers:
       - name: cse-aigc-model-worker-amx
         image: gar-registry.caas.intel.com/cpio/cnagc-fastchat-k8s:latest
