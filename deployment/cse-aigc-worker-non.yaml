@@ -29,7 +29,7 @@ spec:
         - containerPort: 8000
           name: http
           protocol: TCP
-        - containerPort: 21003
+        - containerPort: 21002
           name: model
           protocol: TCP
         env:
@@ -45,13 +45,13 @@ spec:
         - name: FASTCHAT_ROOT
           value: "/home/ubuntu/fastchat"
         - name: MODEL_WORKER_SVC
-          value: cse-aigc-model-worker-amx.aigc-amx.svc.cluster.local
+          value: cse-aigc-model-worker-non.aigc-non.svc.cluster.local
         - name: CONTROLLER_SVC
           value: cse-aigc-controller.default.svc.cluster.local
         - name: CONTROLLER_PORT
           value: "21001"
         - name: MODEL_WORKER_PORT
-          value: "21003"
+          value: "21002"
         - name: OMP_NUM_THREADS
           value: "16"
         command: ["/home/ubuntu/entrypoint.sh"]
@@ -75,8 +75,8 @@ spec:
   ports:
   - protocol: TCP
     name: model
-    port: 21003
-    targetPort: 21003
+    port: 21002
+    targetPort: 21002
   - name: http
     port: 8000
     protocol: TCP
