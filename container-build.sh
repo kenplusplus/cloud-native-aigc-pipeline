@@ -5,6 +5,7 @@ CURR_DIR=$(readlink -f "$(dirname "$0")")
 REGISTER="bluewish/"
 CONTAINER_NAME="cnagc-fastchat"
 CNAGC_FASTCHAT_ROOT=${CURR_DIR}/container/cnagc-fastchat
+CNAGC_FASTCHAT_K8S_ROOT=${CURR_DIR}/container/cnagc-fastchat-k8s
 TAG="v2.2.0-cpu"
 FORCE=false
 
@@ -56,6 +57,15 @@ build() {
                 -t ${REGISTER}${CONTAINER_NAME}:${TAG} \
                 .
 
+            ;;
+        cnagc-fastchat-k8s)
+            pushd ${CNAGC_FASTCHAT_K8S_ROOT}
+            echo "Build container cnagc-fastchat-k8s..."
+            docker build \
+                -f Dockerfile \
+                -t ${REGISTER}${CONTAINER_NAME}:${TAG} \
+                .
+            popd
             ;;
         *)
             echo "Invalid container name ${CONTAINER_NAME}"

@@ -15,14 +15,15 @@ spec:
       containers:
       - name: cse-aigc-controller
         image: gar-registry.caas.intel.com/cpio/cnagc-fastchat-k8s:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 21001
-        command: ["/entrypoint.sh"]
+        command: ["/home/ubuntu/entrypoint.sh"]
         env:
         - name: DEPLOY_TYPE
           value: "controller"
         - name: FASTCHAT_ROOT
-          value: "/fastchat"
+          value: "/home/ubuntu/fastchat"
 ---
 apiVersion: v1
 kind: Service

@@ -197,14 +197,38 @@ to communicate:
 ## 3. Getting Start to Run on Kubernetes
 
 
-### 3.1 Build container `gar-registry.caas.intel.com/cpio/cnagc-fastchat`
+### 3.1 Build container `gar-registry.caas.intel.com/cpio/cnagc-fastchat-k8s`
 
 
 ```
 ./container-build.sh -c cnagc-fastchat-k8s
 ```
 
-There are following tags, the default one is `2.0.100-cpu`
+There are following tags, the default one is `latest`
+
+### 3.3 Mount LLM Model
+
+Please download the required LLM model on the inference server in advance, and then edit the path.
+
+AMX worker: deployment/cse-aigc-worker-amx.yaml
+Non-AMX worker: deployment/cse-aigc-worker-non.yaml
+
+```yaml
+    volumes:
+    - name: model-path
+      hostPath:
+        # edit the model path
+        path: /home/smgaigc/Downloads/cloud-native-aigc-pipeline-main/models/Llama-2-7b-chat-hf-sharded-bf16
+        type: Directory
+```
+
+Also update the node name for each worker.
+
+```yaml
+    nodeSelector:
+      kubernetes.io/hostname: smgaigc-ivory2-0
+```
+
 
 ### 3.2 Deploy
 
